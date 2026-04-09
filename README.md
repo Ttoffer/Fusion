@@ -1,6 +1,6 @@
 # Science — Solar fusion (HTML)
 
-This folder contains a **single static web page**, `Solar_Fusion.html`, that explains **how the Sun fuses hydrogen into helium** and how that relates to **energy release** and **terrestrial fusion** research.
+This folder contains a **single static web page**, `index.html`, that explains **how the Sun fuses hydrogen into helium** and how that relates to **energy release** and **terrestrial fusion** research.
 
 ## What the page covers
 
@@ -13,14 +13,18 @@ The page uses **British English** and simple **SVG figures**; no build step or s
 
 ## How to view
 
-Open `Solar_Fusion.html` in any modern web browser (double-click the file, or “Open with…”).
+Open `index.html` in any modern web browser, or publish the folder on **GitHub Pages** and open the site URL.
+
+**iPhone / iPad:** In Safari, tap **Share → Add to Home Screen**. The **apple-touch-icon** (180×180) is used for the home-screen tile; the short name under the icon comes from **Solar fusion** (`apple-mobile-web-app-title`).
 
 Assets in this folder:
 
 | File | Purpose |
 |------|---------|
-| `Solar_Fusion.html` | The full article and diagrams |
-| `cjf-hal-ai-logo-futuristic.png` | Branding image shown at the top of the page |
+| `index.html` | The full article and diagrams (GitHub Pages entry) |
+| `favicon.svg` | Browser tab icon (vector) |
+| `apple-touch-icon.png` | **180×180** icon when saving to an iPhone / iPad home screen |
+| `cjf-hal-ai-logo-futuristic.png` | Branding image at the top of the page |
 
 ---
 
