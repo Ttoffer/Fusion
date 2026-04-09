@@ -41,16 +41,205 @@
     }
     .page-brand {
       margin-bottom: 1.35rem;
-      text-align: center;
+    }
+    .page-brand-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(0.65rem, 2.5vw, 1.35rem);
+      flex-wrap: wrap;
     }
     .brand-logo {
-      max-width: min(340px, 92vw);
+      max-width: min(248px, 72vw);
       width: 100%;
       height: auto;
       display: block;
-      margin: 0 auto;
+      margin: 0;
       border-radius: 10px;
       box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
+    }
+    .brand-icon-apple {
+      width: clamp(56px, 16vw, 80px);
+      height: auto;
+      display: block;
+      border-radius: 16px;
+      box-shadow: 0 4px 22px rgba(0, 0, 0, 0.45);
+      flex-shrink: 0;
+    }
+    /* Tokamak plasma motion (inline SVG) */
+    .tok-swirl-cw {
+      transform-origin: 0 0;
+      animation: tok-plasma-cw 18s linear infinite;
+    }
+    .tok-swirl-ccw {
+      transform-origin: 0 0;
+      animation: tok-plasma-ccw 26s linear infinite;
+    }
+    .tok-swirl-cw--slow {
+      animation-duration: 24s;
+    }
+    .tok-swirl-ccw--slow {
+      animation-duration: 34s;
+    }
+    .tok-dash-flow {
+      animation: tok-plasma-dash 3.2s linear infinite;
+    }
+    .tok-dash-flow--slow {
+      animation: tok-plasma-dash 4.8s linear infinite;
+    }
+    @keyframes tok-plasma-cw {
+      to { transform: rotate(360deg); }
+    }
+    @keyframes tok-plasma-ccw {
+      to { transform: rotate(-360deg); }
+    }
+    @keyframes tok-plasma-dash {
+      to { stroke-dashoffset: -80; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .tok-swirl-cw,
+      .tok-swirl-ccw,
+      .tok-swirl-cw--slow,
+      .tok-swirl-ccw--slow,
+      .tok-dash-flow,
+      .tok-dash-flow--slow {
+        animation: none !important;
+      }
+    }
+
+    /* D–T fusion diagram (dramatic loop; enable with .dt-anim-run on host) */
+    .diagram-wrap--dt.dt-anim-run svg .dt-d {
+      transform-origin: 120px 100px;
+      animation: dt-d-anim 5.5s ease-in-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-t {
+      transform-origin: 230px 100px;
+      animation: dt-t-anim 5.5s ease-in-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-plus-react {
+      transform-origin: 175px 100px;
+      animation: dt-plus-react-anim 5.5s ease-in-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-bridge {
+      transform-origin: 303px 100px;
+      animation: dt-bridge-anim 5.5s ease-in-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-flash-burst {
+      transform-origin: 0 0;
+      animation: dt-burst-anim 5.5s ease-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-he {
+      transform-origin: 450px 100px;
+      animation: dt-he-anim 5.5s ease-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-plus-prod {
+      transform-origin: 518px 100px;
+      animation: dt-plus-prod-anim 5.5s ease-in-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-n {
+      transform-origin: 590px 100px;
+      animation: dt-n-anim 5.5s ease-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-energy {
+      transform-origin: 360px 178px;
+      animation: dt-energy-anim 5.5s ease-in-out infinite;
+    }
+    @keyframes dt-d-anim {
+      0%, 12% { transform: translate(0, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 0 transparent); }
+      22% { transform: translate(28px, 0) scale(1.14); filter: drop-shadow(0 0 16px rgba(77, 163, 255, 0.95)); }
+      32%, 38% { transform: translate(52px, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 10px rgba(77, 163, 255, 0.55)); }
+      41% { transform: translate(56px, 0); opacity: 0; }
+      42%, 100% { transform: translate(56px, 0); opacity: 0; }
+    }
+    @keyframes dt-t-anim {
+      0%, 12% { transform: translate(0, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 0 transparent); }
+      22% { transform: translate(-28px, 0) scale(1.14); filter: drop-shadow(0 0 16px rgba(200, 107, 255, 0.9)); }
+      32%, 38% { transform: translate(-52px, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 10px rgba(200, 107, 255, 0.5)); }
+      41% { transform: translate(-56px, 0); opacity: 0; }
+      42%, 100% { transform: translate(-56px, 0); opacity: 0; }
+    }
+    @keyframes dt-plus-react-anim {
+      0%, 18% { opacity: 1; transform: scale(1); }
+      26% { transform: scale(1.35); fill: #5cdbff; }
+      38%, 41% { opacity: 0; transform: scale(0.6); }
+      42%, 100% { opacity: 0; }
+    }
+    @keyframes dt-bridge-anim {
+      0%, 16% { opacity: 0.65; }
+      26% { opacity: 1; }
+      34%, 38% { opacity: 1; filter: drop-shadow(0 0 6px rgba(92, 219, 255, 0.8)); }
+      48%, 100% { opacity: 0.92; filter: none; }
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-arrow-line {
+      animation: dt-arrow-stroke 5.5s ease-in-out infinite;
+    }
+    @keyframes dt-arrow-stroke {
+      0%, 20% { stroke: #6b7a9e; stroke-width: 2; }
+      32% { stroke: #5cdbff; stroke-width: 3.2; }
+      38% { stroke: #ffffff; stroke-width: 3.6; filter: drop-shadow(0 0 4px #5cdbff); }
+      50%, 100% { stroke: #6b7a9e; stroke-width: 2; filter: none; }
+    }
+    @keyframes dt-burst-anim {
+      0%, 33% { opacity: 0; transform: scale(0.2); }
+      36% { opacity: 1; transform: scale(1); fill: #ffffff; }
+      39% { opacity: 0.9; transform: scale(7); fill: #5cdbff; }
+      44%, 100% { opacity: 0; transform: scale(11); fill: #b8a0ff; }
+    }
+    @keyframes dt-he-anim {
+      0%, 38% { opacity: 0; transform: scale(0.35) translate(-8px, 0); filter: drop-shadow(0 0 0 transparent); }
+      43% { opacity: 1; transform: scale(1.28) translate(0, 0); filter: drop-shadow(0 0 26px rgba(184, 160, 255, 0.95)); }
+      52% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(184, 160, 255, 0.5)); }
+      100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(184, 160, 255, 0.35)); }
+    }
+    @keyframes dt-plus-prod-anim {
+      0%, 40% { opacity: 0.4; transform: scale(0.8); }
+      48%, 100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes dt-n-anim {
+      0%, 40% { opacity: 0; transform: scale(0.35) translate(-24px, 0); filter: none; }
+      46% { opacity: 1; transform: scale(1.22) translate(6px, 0); filter: drop-shadow(0 0 18px rgba(154, 168, 196, 0.9)); }
+      54% { transform: scale(1) translate(0, 0); filter: drop-shadow(0 0 8px rgba(154, 168, 196, 0.45)); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes dt-energy-anim {
+      0%, 44% { fill: #5cdbff; opacity: 0.88; }
+      50% { fill: #ffffff; opacity: 1; filter: drop-shadow(0 0 14px rgba(92, 219, 255, 0.85)); }
+      58%, 100% { fill: #5cdbff; opacity: 1; filter: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .diagram-wrap--dt svg .dt-d,
+      .diagram-wrap--dt svg .dt-t,
+      .diagram-wrap--dt svg .dt-plus-react,
+      .diagram-wrap--dt svg .dt-bridge,
+      .diagram-wrap--dt svg .dt-flash-burst,
+      .diagram-wrap--dt svg .dt-he,
+      .diagram-wrap--dt svg .dt-plus-prod,
+      .diagram-wrap--dt svg .dt-n,
+      .diagram-wrap--dt svg .dt-energy,
+      .diagram-wrap--dt svg .dt-arrow-line {
+        animation: none !important;
+      }
+      .diagram-wrap--dt svg .dt-d,
+      .diagram-wrap--dt svg .dt-t,
+      .diagram-wrap--dt svg .dt-plus-react,
+      .diagram-wrap--dt svg .dt-bridge,
+      .diagram-wrap--dt svg .dt-he,
+      .diagram-wrap--dt svg .dt-plus-prod,
+      .diagram-wrap--dt svg .dt-n {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+      .diagram-wrap--dt svg .dt-flash-burst {
+        opacity: 0 !important;
+        transform: none !important;
+      }
+      .diagram-wrap--dt svg .dt-energy {
+        filter: none !important;
+      }
+      .diagram-wrap--dt svg .dt-plus-react {
+        fill: #9aa8c4 !important;
+      }
     }
     h1 {
       font-weight: 600;
@@ -158,25 +347,77 @@
     /* --- motion diagrams (toggle) --- */
     .anim-controls {
       margin-top: 0.75rem;
-      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
     }
-    .anim-btn {
-      background: #243054;
+    .anim-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.35rem 0.5rem;
+      border: none;
+      border-radius: 10px;
+      background: rgba(36, 48, 84, 0.6);
       color: var(--text);
-      border: 1px solid var(--border);
-      padding: 0.5rem 1.1rem;
-      border-radius: 8px;
       font: inherit;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
-    .anim-btn:hover {
-      background: #2c3a66;
-      border-color: #3d5080;
+    .anim-toggle:hover {
+      background: rgba(44, 58, 102, 0.85);
     }
-    .anim-btn:focus-visible {
+    .anim-toggle:focus-visible {
       outline: 2px solid var(--photon);
-      outline-offset: 2px;
+      outline-offset: 3px;
+    }
+    .anim-toggle-ui {
+      position: relative;
+      width: 52px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+    .anim-toggle-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: #2c3548;
+      border: 1px solid var(--border);
+      box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.35);
+      transition: background 0.25s ease, box-shadow 0.25s ease;
+    }
+    .anim-toggle-knob {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #f0f4fc 0%, #c5d0e8 100%);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+      transition: transform 0.28s cubic-bezier(0.34, 1.2, 0.64, 1);
+    }
+    .anim-toggle[aria-pressed="true"] .anim-toggle-track {
+      background: linear-gradient(180deg, #1a6b62 0%, #0d4a44 100%);
+      border-color: #2a9d8f;
+      box-shadow:
+        inset 0 1px 3px rgba(255, 255, 255, 0.12),
+        0 0 16px rgba(92, 219, 255, 0.25);
+    }
+    .anim-toggle[aria-pressed="true"] .anim-toggle-knob {
+      transform: translateX(24px);
+      background: linear-gradient(180deg, #ffffff 0%, #b8e8ff 100%);
+    }
+    .anim-toggle-text {
+      color: var(--muted);
+      font-weight: 500;
+      min-width: 4.5rem;
+      text-align: left;
+    }
+    .anim-toggle[aria-pressed="true"] .anim-toggle-text {
+      color: var(--photon);
     }
     .anim-panel {
       margin-top: 1rem;
@@ -200,6 +441,82 @@
       border-radius: 10px;
       border: 1px solid var(--border);
       overflow: hidden;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    /* Dramatic full-stage flashes (timed to each scenario’s duration) */
+    .anim-stage.anim-run::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      pointer-events: none;
+      z-index: 8;
+      opacity: 0;
+    }
+    .anim-stage--weak.anim-run::after {
+      animation: fx-weak 9s ease-out forwards;
+    }
+    .anim-stage--he3.anim-run::after {
+      animation: fx-he3 8s ease-out forwards;
+    }
+    .anim-stage--he4.anim-run::after {
+      animation: fx-he4 9s ease-out forwards;
+    }
+    .anim-stage--mass.anim-run::after {
+      animation: fx-mass 7s ease-out forwards;
+    }
+    .anim-stage.anim-run {
+      animation: fx-stage-border 9s ease-out forwards;
+    }
+    .anim-stage--he3.anim-run {
+      animation: fx-stage-border 8s ease-out forwards;
+    }
+    .anim-stage--he4.anim-run {
+      animation: fx-stage-border 9s ease-out forwards;
+    }
+    .anim-stage--mass.anim-run {
+      animation: fx-stage-border-mass 7s ease-out forwards;
+    }
+    @keyframes fx-weak {
+      0%, 24%, 100% { opacity: 0; box-shadow: inset 0 0 0 transparent; }
+      26% { opacity: 1; box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.2); }
+      29% { opacity: 0; }
+      31% { opacity: 1; box-shadow: inset 0 0 120px rgba(200, 107, 255, 0.45); }
+      36% { opacity: 0; }
+      39% { opacity: 1; box-shadow: inset 0 0 80px rgba(92, 219, 255, 0.25); }
+      44% { opacity: 0; }
+    }
+    @keyframes fx-he3 {
+      0%, 36%, 100% { opacity: 0; }
+      41% { opacity: 1; box-shadow: inset 0 0 100px rgba(255, 200, 100, 0.35); }
+      44% { opacity: 0; }
+      49% { opacity: 1; box-shadow: inset 0 0 140px rgba(92, 219, 255, 0.45); }
+      54% { opacity: 0; }
+    }
+    @keyframes fx-he4 {
+      0%, 29%, 100% { opacity: 0; }
+      32% { opacity: 1; box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.35); }
+      34% { opacity: 0.4; }
+      37% { opacity: 1; box-shadow: inset 0 0 160px rgba(184, 160, 255, 0.55); }
+      42% { opacity: 0; }
+      45% { opacity: 1; box-shadow: inset 0 0 60px rgba(92, 219, 255, 0.3); }
+      48% { opacity: 0; }
+    }
+    @keyframes fx-mass {
+      0%, 40%, 100% { opacity: 0; }
+      44% { opacity: 1; box-shadow: inset 0 0 100px rgba(92, 219, 255, 0.35); }
+      52% { opacity: 0; }
+      56% { opacity: 1; box-shadow: inset 0 0 70px rgba(255, 214, 90, 0.2); }
+      62% { opacity: 0; }
+    }
+    @keyframes fx-stage-border {
+      0%, 20%, 45%, 100% { border-color: var(--border); box-shadow: none; }
+      28%, 33% { border-color: rgba(200, 107, 255, 0.7); box-shadow: 0 0 24px rgba(200, 107, 255, 0.25); }
+      38%, 43% { border-color: rgba(92, 219, 255, 0.6); box-shadow: 0 0 20px rgba(92, 219, 255, 0.2); }
+    }
+    @keyframes fx-stage-border-mass {
+      0%, 35%, 100% { border-color: var(--border); box-shadow: none; }
+      42%, 55% { border-color: rgba(92, 219, 255, 0.65); box-shadow: 0 0 22px rgba(92, 219, 255, 0.3); }
     }
     .anim-stage--tall {
       height: 220px;
@@ -417,14 +734,17 @@
       100% { opacity: 0; }
     }
     @keyframes weak-w {
-      0%, 18% { opacity: 0; transform: scale(0.6); }
-      24% { opacity: 1; transform: scale(1); }
-      36% { opacity: 0; transform: scale(0.85); }
+      0%, 18% { opacity: 0; transform: scale(0.45); filter: drop-shadow(0 0 0 transparent); }
+      23% { opacity: 0.9; transform: scale(1.18); filter: drop-shadow(0 0 14px rgba(200, 107, 255, 0.85)); }
+      28% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 18px rgba(200, 107, 255, 0.65)); }
+      33% { opacity: 0.75; transform: scale(1.22); filter: drop-shadow(0 0 22px #c86bff); }
+      37% { opacity: 0; transform: scale(0.8); filter: none; }
       100% { opacity: 0; }
     }
     @keyframes weak-d {
-      0%, 30% { opacity: 0; transform: scale(0.85); }
-      36% { opacity: 1; transform: scale(1); }
+      0%, 30% { opacity: 0; transform: scale(0.78); }
+      34% { opacity: 1; transform: scale(1.1); }
+      39% { opacity: 1; transform: scale(1); }
       100% { opacity: 1; transform: scale(1); }
     }
     @keyframes weak-ep {
@@ -527,9 +847,11 @@
       100% { opacity: 1; transform: scale(1); }
     }
     @keyframes he3-g {
-      0%, 46% { opacity: 0; transform: scale(0.5); }
-      52% { opacity: 1; transform: scale(1.1); }
-      60%, 100% { opacity: 1; transform: scale(1); }
+      0%, 46% { opacity: 0; transform: scale(0.35); filter: brightness(1); }
+      50% { opacity: 1; transform: scale(1.38); filter: brightness(1.65) drop-shadow(0 0 18px #ffd54a); }
+      55% { opacity: 1; transform: scale(0.98); filter: brightness(1.25); }
+      60% { opacity: 1; transform: scale(1.08); filter: brightness(1.4) drop-shadow(0 0 10px rgba(255, 213, 74, 0.5)); }
+      68%, 100% { opacity: 1; transform: scale(1); filter: brightness(1); }
     }
 
     @media (min-width: 700px) {
@@ -587,15 +909,19 @@
       100% { opacity: 0; }
     }
     @keyframes he4-flash {
-      0%, 30% { opacity: 0; }
-      34% { opacity: 0.9; }
-      42% { opacity: 0; }
-      100% { opacity: 0; }
+      0%, 27% { opacity: 0; transform: scale(0.25); }
+      30% { opacity: 0.75; transform: scale(1.35); }
+      32% { opacity: 0.12; transform: scale(0.9); }
+      35% { opacity: 1; transform: scale(1.75); }
+      38% { opacity: 0.25; transform: scale(1.1); }
+      41% { opacity: 0.9; transform: scale(1.55); }
+      46%, 100% { opacity: 0; transform: scale(1); }
     }
     @keyframes he4-core {
-      0%, 36% { opacity: 0; transform: scale(0.6); }
-      44% { opacity: 1; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1); }
+      0%, 36% { opacity: 0; transform: scale(0.42); filter: drop-shadow(0 0 0 transparent); }
+      41% { opacity: 1; transform: scale(1.14); filter: drop-shadow(0 0 12px rgba(184, 160, 255, 0.55)); }
+      46% { opacity: 1; transform: scale(0.97); }
+      52%, 100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(122, 158, 232, 0.25)); }
     }
     @keyframes he4-p1 {
       0%, 40% { opacity: 0; transform: translate(0, 0); }
@@ -652,22 +978,19 @@
       100% { transform: scaleY(0.72); }
     }
     @keyframes mass-delta {
-      0%, 38% { opacity: 0; }
-      48% { opacity: 1; }
-      100% { opacity: 1; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .anim-controls {
-        display: none;
-      }
+      0%, 38% { opacity: 0; transform: translateX(-50%) scale(0.9); text-shadow: none; }
+      44% { opacity: 1; transform: translateX(-50%) scale(1.08); text-shadow: 0 0 14px rgba(92, 219, 255, 0.95), 0 0 28px rgba(92, 219, 255, 0.35); }
+      52%, 100% { opacity: 1; transform: translateX(-50%) scale(1); text-shadow: 0 0 8px rgba(92, 219, 255, 0.4); }
     }
   </style>
 </head>
 <body>
   <main>
     <header class="page-brand">
-      <img src="cjf-hal-ai-logo-futuristic.png" alt="CJF Hal AI" class="brand-logo" decoding="async" />
+      <div class="page-brand-inner">
+        <img src="cjf-hal-ai-logo-futuristic.png" alt="CJF Hal AI" class="brand-logo" decoding="async" />
+        <img src="apple-touch-icon.png" alt="" width="180" height="180" class="brand-icon-apple" decoding="async" />
+      </div>
     </header>
     <h1>Solar fusion and the weak interaction</h1>
     <p class="subtitle">Weak interaction, building helium-4 in the proton–proton chain, and why the Sun shines.</p>
@@ -747,7 +1070,10 @@
         <span><span class="dot" style="background:var(--neutrino)"></span> Neutrino (ν<sub>e</sub>)</span>
       </div>
       <div class="anim-controls">
-        <button type="button" class="anim-btn" data-target="anim-weak" aria-expanded="false" aria-controls="anim-weak">Show particle motion</button>
+        <button type="button" class="anim-toggle" data-target="anim-weak" aria-expanded="false" aria-pressed="false" aria-controls="anim-weak" title="Turn the motion strip on or off">
+          <span class="anim-toggle-ui" aria-hidden="true"><span class="anim-toggle-track"></span><span class="anim-toggle-knob"></span></span>
+          <span class="anim-toggle-text">Motion</span>
+        </button>
       </div>
       <div id="anim-weak" class="anim-panel" hidden>
         <p class="anim-hint">Simplified sequence for <span class="eq">p + p → ²H + e⁺ + νₑ</span>. Two protons meet; a <strong>W⁺</strong> mediates the weak step; a <strong>deuterium</strong> nucleus appears; the W’s decay products <strong>fly outward</strong> (timing and distances not physical).</p>
@@ -833,7 +1159,10 @@
         <span><span class="dot" style="background:var(--photon); border:1px solid #5cdbff"></span> Gamma ray (γ)</span>
       </div>
       <div class="anim-controls">
-        <button type="button" class="anim-btn" data-target="anim-he3" aria-expanded="false" aria-controls="anim-he3">Show particle motion</button>
+        <button type="button" class="anim-toggle" data-target="anim-he3" aria-expanded="false" aria-pressed="false" aria-controls="anim-he3" title="Turn the motion strip on or off">
+          <span class="anim-toggle-ui" aria-hidden="true"><span class="anim-toggle-track"></span><span class="anim-toggle-knob"></span></span>
+          <span class="anim-toggle-text">Motion</span>
+        </button>
       </div>
       <div id="anim-he3" class="anim-panel" hidden>
         <p class="anim-hint"><strong>²H</strong> and a <strong>proton</strong> move together; they fuse into <strong>³He</strong>; a <strong>gamma photon</strong> (energy) appears as the nucleus settles.</p>
@@ -907,7 +1236,10 @@
         <text x="492" y="252" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Energy also emerges here as photons and faster-moving nuclei (not drawn to scale).</text>
       </svg>
       <div class="anim-controls">
-        <button type="button" class="anim-btn" data-target="anim-he4" aria-expanded="false" aria-controls="anim-he4">Show particle motion</button>
+        <button type="button" class="anim-toggle" data-target="anim-he4" aria-expanded="false" aria-pressed="false" aria-controls="anim-he4" title="Turn the motion strip on or off">
+          <span class="anim-toggle-ui" aria-hidden="true"><span class="anim-toggle-track"></span><span class="anim-toggle-knob"></span></span>
+          <span class="anim-toggle-text">Motion</span>
+        </button>
       </div>
       <div id="anim-he4" class="anim-panel" hidden>
         <p class="anim-hint">Two <strong>³He</strong> nuclei collide; <strong>⁴He</strong> forms; two <strong>protons</strong> are kicked out and carry away energy (flash is symbolic).</p>
@@ -984,7 +1316,10 @@
         <text x="360" y="242" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">(photons, particle motion, neutrino energy — not to scale)</text>
       </svg>
       <div class="anim-controls">
-        <button type="button" class="anim-btn" data-target="anim-mass" aria-expanded="false" aria-controls="anim-mass">Animate mass → energy</button>
+        <button type="button" class="anim-toggle" data-target="anim-mass" aria-expanded="false" aria-pressed="false" aria-controls="anim-mass" title="Turn the mass-defect animation on or off">
+          <span class="anim-toggle-ui" aria-hidden="true"><span class="anim-toggle-track"></span><span class="anim-toggle-knob"></span></span>
+          <span class="anim-toggle-text">Motion</span>
+        </button>
       </div>
       <div id="anim-mass" class="anim-panel" hidden>
         <p class="anim-hint">The <strong>helium-4</strong> side has slightly <strong>less rest mass</strong> than the starting hydrogen nuclei (plus escaping light particles). That <strong>Δm</strong> is what becomes sunlight and heat via <span class="eq">E = Δm c²</span>.</p>
@@ -1041,7 +1376,7 @@
 
     <h2>Small precision notes (optional)</h2>
     <ul>
-      <li><strong>Motion strips</strong> under each diagram are pedagogical cartoons; if your system prefers reduced motion, the play buttons are hidden.</li>
+      <li><strong>Motion strips</strong> under several diagrams are pedagogical cartoons; the <strong>D–T fusion</strong> figure animates in place. Use the <strong>Motion</strong> switch to show, hide, or stop motion at any time.</li>
       <li>All diagrams are <strong>schematic</strong>: quarks are confined in hadrons; real calculations use quantum theory and measured masses.</li>
       <li>The Sun also runs <strong>pp II / pp III</strong> side chains and a modest <strong>CNO</strong> contribution (roughly ~1% of luminosity in standard solar models); the reactions above are the <strong>main pp I branch</strong> that carries most of the fusion rate.</li>
       <li>A minor <strong>pep</strong> channel (<span class="eq">p + p + e⁻ → <sup>2</sup>H + ν<sub>e</sub></span>) makes deuterium without a positron; it is rare in the Sun but important for some neutrino measurements.</li>
@@ -1053,31 +1388,63 @@
       The physics is the same <strong>mass defect</strong> idea as in the Sun, but almost every practical detail differs. Stars are held together by <strong>gravity</strong>; a laboratory plasma would hit the walls in microseconds unless something else <strong>confines</strong> it. The best-known approach is a doughnut-shaped <strong>torus</strong> of hot plasma inside powerful <strong>magnetic fields</strong> — the principle behind <strong>tokamaks</strong> and related devices.
     </p>
 
-    <div class="diagram-wrap" role="img" aria-label="Comparison: Sun confined by gravity versus tokamak confined by magnetic fields">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220">
+    <div class="diagram-wrap" role="img" aria-label="Comparison: Sun confined by gravity versus tokamak confined by magnetic fields. Side labels and bottom key give order-of-magnitude temperature, density, and pressure.">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 292" width="720" height="292">
         <defs>
           <marker id="arr-sun" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#ffd54a"/></marker>
           <marker id="arr-tok" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#5cdbff"/></marker>
         </defs>
         <text x="360" y="22" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Sun vs magnetic fusion: what holds the plasma?</text>
+        <!-- Side scales (orders of magnitude; not to scale with each other) -->
+        <text x="10" y="56" text-anchor="start" fill="#7a8498" font-size="8" font-weight="600" font-family="Segoe UI, sans-serif">SOLAR CORE</text>
+        <text x="10" y="70" text-anchor="start" fill="#c5b896" font-size="9" font-family="Segoe UI, sans-serif">T ≈ 15 MK</text>
+        <text x="10" y="84" text-anchor="start" fill="#c5b896" font-size="9" font-family="Segoe UI, sans-serif">ρ ≈ 150 g cm⁻³</text>
+        <text x="10" y="98" text-anchor="start" fill="#c5b896" font-size="9" font-family="Segoe UI, sans-serif">P ~ 250M atm</text>
+        <text x="10" y="114" text-anchor="start" fill="#7a8498" font-size="7.5" font-family="Segoe UI, sans-serif">(gravity squeeze)</text>
+        <text x="710" y="56" text-anchor="end" fill="#7a8498" font-size="8" font-weight="600" font-family="Segoe UI, sans-serif">TOKAMAK PLASMA</text>
+        <text x="710" y="70" text-anchor="end" fill="#8ecfe0" font-size="9" font-family="Segoe UI, sans-serif">T ≈ 100–200 MK</text>
+        <text x="710" y="84" text-anchor="end" fill="#8ecfe0" font-size="9" font-family="Segoe UI, sans-serif">n ~ 10⁻⁶ × sea-level air</text>
+        <text x="710" y="98" text-anchor="end" fill="#8ecfe0" font-size="9" font-family="Segoe UI, sans-serif">P ≪ solar core</text>
+        <text x="710" y="114" text-anchor="end" fill="#7a8498" font-size="7.5" font-family="Segoe UI, sans-serif">(vessel ~ vacuum)</text>
         <text x="180" y="48" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">In the Sun</text>
         <circle cx="180" cy="118" r="62" fill="rgba(255,180,80,0.12)" stroke="#ffb050" stroke-width="2"/>
         <circle cx="180" cy="118" r="28" fill="rgba(255,120,60,0.35)" stroke="#ff8c42" stroke-width="1.5"/>
         <text x="180" y="122" text-anchor="middle" fill="#ffd8a8" font-size="11" font-family="Segoe UI, sans-serif">hot core</text>
-        <text x="180" y="188" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Gravity confines</text>
-        <text x="180" y="204" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">billions of tonnes of overlying matter</text>
+        <text x="180" y="182" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Gravity confines</text>
+        <text x="180" y="196" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">billions of tonnes of overlying matter</text>
         <path d="M180 56 L180 78" stroke="#ffd54a" stroke-width="2" marker-end="url(#arr-sun)"/>
         <text x="195" y="72" fill="#ffd54a" font-size="10" font-family="Segoe UI, sans-serif">F inward</text>
         <text x="540" y="48" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">Tokamak-style reactor (schematic)</text>
         <ellipse cx="540" cy="118" rx="100" ry="52" fill="none" stroke="#6b7a9e" stroke-width="2" stroke-dasharray="6 4"/>
         <ellipse cx="540" cy="118" rx="72" ry="36" fill="rgba(200,107,255,0.15)" stroke="#c86bff" stroke-width="2"/>
-        <text x="540" y="122" text-anchor="middle" fill="#e8ecf4" font-size="11" font-family="Segoe UI, sans-serif">plasma</text>
         <ellipse cx="540" cy="118" rx="95" ry="48" fill="none" stroke="#5cdbff" stroke-width="1" opacity="0.5"/>
-        <path d="M460 118 Q540 88 620 118 Q540 148 460 118" fill="none" stroke="#5cdbff" stroke-width="1.2" opacity="0.7"/>
-        <text x="540" y="188" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Magnetic fields confine</text>
-        <text x="540" y="204" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">hot, low-density plasma (no gravity bottle)</text>
+        <g transform="translate(540,118)" aria-hidden="true">
+          <g class="tok-swirl-cw">
+            <ellipse cx="0" cy="0" rx="82" ry="41" fill="none" stroke="rgba(92,219,255,0.5)" stroke-width="1.6" stroke-dasharray="14 20" class="tok-dash-flow"/>
+            <path d="M-68,0 A68,34 0 0,1 68,0" fill="none" stroke="rgba(92,219,255,0.55)" stroke-width="1.15"/>
+            <path d="M-62,9 A62,31 0 0,1 62,9" fill="none" stroke="rgba(200,107,255,0.42)" stroke-width="0.95"/>
+            <path d="M-65,-10 A64,33 0 0,0 65,-10" fill="none" stroke="rgba(255,214,90,0.28)" stroke-width="0.85"/>
+          </g>
+          <g class="tok-swirl-ccw">
+            <path d="M-56,-18 Q0,-44 56,-18" fill="none" stroke="rgba(92,219,255,0.38)" stroke-width="1"/>
+            <path d="M-56,18 Q0,44 56,18" fill="none" stroke="rgba(200,107,255,0.32)" stroke-width="0.9"/>
+            <ellipse cx="0" cy="0" rx="76" ry="38" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" stroke-dasharray="4 18" class="tok-dash-flow--slow"/>
+          </g>
+        </g>
+        <text x="540" y="122" text-anchor="middle" fill="#e8ecf4" font-size="11" font-family="Segoe UI, sans-serif">plasma</text>
+        <text x="540" y="182" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Magnetic fields confine</text>
+        <text x="540" y="196" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">hot, low-density plasma (no gravity bottle)</text>
+        <line x1="32" y1="206" x2="688" y2="206" stroke="#2a3a5c" stroke-width="1" opacity="0.85"/>
+        <text x="360" y="226" text-anchor="middle" fill="#7a8aad" font-size="10.5" font-family="Segoe UI, sans-serif">Key — T: temperature (kelvin) · MK: millions of kelvin · ρ (rho): mass density · P: pressure · M: million · atm: atmospheres</text>
+        <text x="360" y="244" text-anchor="middle" fill="#7a8aad" font-size="10.5" font-family="Segoe UI, sans-serif">n: particle number density (ions + electrons, order of magnitude) · ≪: much less than</text>
+        <text x="360" y="262" text-anchor="middle" fill="#6b7a9e" font-size="9.5" font-family="Segoe UI, sans-serif">Tokamak side: n is roughly one-millionth the particle density of sea-level air (order of magnitude).</text>
+        <text x="360" y="278" text-anchor="middle" fill="#6b7a9e" font-size="9.5" font-family="Segoe UI, sans-serif">Sun side: central P ≈ 250 million atm (model-dependent, order of magnitude).</text>
       </svg>
     </div>
+
+    <p>
+      It can seem surprising that the plasma’s <strong>electron (and ion) density</strong> <span class="eq">n</span> is <strong>vastly smaller</strong> than in air. The diagram is comparing <strong>how many charged particles occupy each cubic metre</strong>. Sea-level air contains on the order of <strong>10²⁵</strong> molecules per cubic metre — a huge count of atoms, even though the gas is chemically neutral and cold. A tokamak is pumped to a <strong>good vacuum</strong> and only a <strong>small amount of fuel</strong> is ionised and heated; typical line-averaged densities are nearer <strong>10¹⁹–10²⁰ m⁻³</strong>, hence the rough <strong>one part in a million</strong> figure next to air. The plasma is still extremely <strong>hot</strong> and can carry large <strong>fusion power per cubic metre</strong> in a reactor because reaction rates depend on <strong>temperature and confinement</strong> as well as <span class="eq">n</span> — and because each ion is far more energetic than an air molecule. If one tried to hold air-like <strong>particle density</strong> at <strong>100–200 million kelvin</strong>, the implied <strong>pressure and wall loading</strong> would be far beyond what magnetic fields and materials can manage today, so experiments deliberately work with a <strong>tenuous, fully ionised</strong> fuel. The Sun’s core, by contrast, is both very hot and <strong>enormously compressed</strong> by gravity — a regime a tokamak does not try to copy.
+    </p>
 
     <h3>Why it is harder on Earth</h3>
     <p>
@@ -1088,28 +1455,49 @@
       Most of that energy emerges in the <strong>neutron</strong> (the helium nucleus, or <strong>α</strong> particle, carries the rest). The neutron is not confined by the magnetic field; it flies into the surrounding <strong>blanket</strong>, where its kinetic energy can be turned into heat for a power cycle — and, with a <strong>lithium</strong>-containing blanket, some reactions can <strong>breed tritium</strong> to replace the scarce fuel consumed.
     </p>
 
-    <div class="diagram-wrap" role="img" aria-label="Diagram: D and T nuclei fuse to helium-4 and neutron releasing energy">
+    <div id="anim-dt" class="diagram-wrap diagram-wrap--dt anim-inline-host" role="img" aria-label="Diagram: D and T nuclei fuse to helium-4 and neutron releasing energy. Use the Motion control to play or stop the reaction animation.">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200">
+        <defs>
+          <marker id="arr-dt" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e"/></marker>
+        </defs>
         <text x="360" y="24" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Deuterium–tritium fusion (main candidate for first power reactors)</text>
-        <circle cx="120" cy="100" r="26" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
-        <text x="120" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">²H</text>
-        <text x="120" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">deuterium</text>
-        <text x="175" y="104" text-anchor="middle" fill="#9aa8c4" font-size="20" font-family="Segoe UI, sans-serif">+</text>
-        <circle cx="230" cy="100" r="26" fill="#2a1f32" stroke="#c86bff" stroke-width="2"/>
-        <text x="230" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">³H</text>
-        <text x="230" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">tritium</text>
-        <line x1="268" y1="100" x2="338" y2="100" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arr-dt)"/>
-        <defs><marker id="arr-dt" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e"/></marker></defs>
-        <text x="303" y="92" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">fusion</text>
-        <ellipse cx="450" cy="100" rx="44" ry="32" fill="rgba(184,160,255,0.2)" stroke="#b8a0ff" stroke-width="2"/>
-        <text x="450" y="104" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">⁴He</text>
-        <text x="450" y="138" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">α particle</text>
-        <text x="518" y="104" text-anchor="middle" fill="#9aa8c4" font-size="18" font-family="Segoe UI, sans-serif">+</text>
-        <circle cx="590" cy="100" r="22" fill="#2a3545" stroke="#9aa8c4" stroke-width="2" stroke-dasharray="4 3"/>
-        <text x="590" y="104" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">n</text>
-        <text x="590" y="138" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">neutron (~80% E)</text>
-        <text x="360" y="178" text-anchor="middle" fill="#5cdbff" font-size="11" font-family="Segoe UI, sans-serif">Total ≈ 17.6 MeV released (carried mainly by the neutron and α)</text>
+        <g class="dt-d">
+          <circle cx="120" cy="100" r="26" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
+          <text x="120" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">²H</text>
+          <text x="120" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">deuterium</text>
+        </g>
+        <text x="175" y="104" text-anchor="middle" fill="#9aa8c4" font-size="20" font-family="Segoe UI, sans-serif" class="dt-plus-react">+</text>
+        <g class="dt-t">
+          <circle cx="230" cy="100" r="26" fill="#2a1f32" stroke="#c86bff" stroke-width="2"/>
+          <text x="230" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">³H</text>
+          <text x="230" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">tritium</text>
+        </g>
+        <g class="dt-bridge">
+          <line class="dt-arrow-line" x1="268" y1="100" x2="338" y2="100" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arr-dt)"/>
+          <text x="303" y="92" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">fusion</text>
+        </g>
+        <g transform="translate(303,100)" aria-hidden="true">
+          <circle class="dt-flash-burst" cx="0" cy="0" r="10" fill="#ffffff" opacity="0"/>
+        </g>
+        <g class="dt-he">
+          <ellipse cx="450" cy="100" rx="44" ry="32" fill="rgba(184,160,255,0.2)" stroke="#b8a0ff" stroke-width="2"/>
+          <text x="450" y="104" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">⁴He</text>
+          <text x="450" y="138" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">α particle</text>
+        </g>
+        <text x="518" y="104" text-anchor="middle" fill="#9aa8c4" font-size="18" font-family="Segoe UI, sans-serif" class="dt-plus-prod">+</text>
+        <g class="dt-n">
+          <circle cx="590" cy="100" r="22" fill="#2a3545" stroke="#9aa8c4" stroke-width="2" stroke-dasharray="4 3"/>
+          <text x="590" y="104" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">n</text>
+          <text x="590" y="138" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">neutron (~80% E)</text>
+        </g>
+        <text x="360" y="178" text-anchor="middle" fill="#5cdbff" font-size="11" font-family="Segoe UI, sans-serif" class="dt-energy">Total ≈ 17.6 MeV released (carried mainly by the neutron and α)</text>
       </svg>
+      <div class="anim-controls">
+        <button type="button" class="anim-toggle" data-target="anim-dt" aria-expanded="false" aria-pressed="false" aria-controls="anim-dt" title="Turn the D–T reaction animation on or off">
+          <span class="anim-toggle-ui" aria-hidden="true"><span class="anim-toggle-track"></span><span class="anim-toggle-knob"></span></span>
+          <span class="anim-toggle-text">Motion</span>
+        </button>
+      </div>
     </div>
 
     <div class="diagram-wrap" role="img" aria-label="Schematic tokamak: toroidal plasma, coils, and central solenoid">
@@ -1121,6 +1509,19 @@
         <ellipse cx="360" cy="172" rx="168" ry="62" fill="none" stroke="#5cdbff" stroke-width="2" opacity="0.6"/>
         <ellipse cx="360" cy="172" rx="118" ry="46" fill="none" stroke="#c86bff" stroke-width="16" stroke-opacity="0.35"/>
         <ellipse cx="360" cy="172" rx="110" ry="40" fill="none" stroke="#c86bff" stroke-width="2" opacity="0.9"/>
+        <g transform="translate(360,172)" aria-hidden="true">
+          <g class="tok-swirl-cw tok-swirl-cw--slow">
+            <ellipse cx="0" cy="0" rx="112" ry="42" fill="none" stroke="rgba(92,219,255,0.5)" stroke-width="2" stroke-dasharray="6 14 4 14" class="tok-dash-flow"/>
+            <path d="M-112,0 A112,42 0 0,1 112,0" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M-102,0 A102,38 0 0,0 102,0" fill="none" stroke="rgba(200,107,255,0.4)" stroke-width="1.3"/>
+            <path d="M-108,12 A108,40 0 0,1 108,12" fill="none" stroke="rgba(92,219,255,0.28)" stroke-width="1"/>
+          </g>
+          <g class="tok-swirl-ccw tok-swirl-ccw--slow">
+            <ellipse cx="0" cy="0" rx="100" ry="38" fill="none" stroke="rgba(200,107,255,0.3)" stroke-width="1.2" stroke-dasharray="22 28" class="tok-dash-flow--slow"/>
+            <path d="M-92,-22 Q0,-52 92,-22" fill="none" stroke="rgba(92,219,255,0.25)" stroke-width="1.1"/>
+            <path d="M-92,22 Q0,52 92,22" fill="none" stroke="rgba(255,214,90,0.2)" stroke-width="1"/>
+          </g>
+        </g>
         <text x="248" y="176" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">plasma</text>
         <text x="472" y="176" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">plasma</text>
         <rect x="342" y="128" width="36" height="88" rx="5" fill="#3a3548" stroke="#8a8098" stroke-width="2"/>
@@ -1160,20 +1561,42 @@
   </main>
   <script>
     (function () {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      document.querySelectorAll(".anim-btn").forEach(function (btn) {
+      document.querySelectorAll(".anim-toggle").forEach(function (btn) {
         btn.addEventListener("click", function () {
           var id = btn.getAttribute("data-target");
           var panel = document.getElementById(id);
           if (!panel) return;
+          if (panel.classList.contains("anim-inline-host")) {
+            var inlineOn = btn.getAttribute("aria-pressed") === "true";
+            if (inlineOn) {
+              btn.setAttribute("aria-expanded", "false");
+              btn.setAttribute("aria-pressed", "false");
+              panel.classList.remove("dt-anim-run");
+            } else {
+              btn.setAttribute("aria-expanded", "true");
+              btn.setAttribute("aria-pressed", "true");
+              panel.classList.remove("dt-anim-run");
+              void panel.offsetWidth;
+              panel.classList.add("dt-anim-run");
+            }
+            return;
+          }
           var stage = panel.querySelector(".anim-stage");
-          panel.hidden = false;
-          btn.setAttribute("aria-expanded", "true");
-          btn.textContent = "Replay motion";
-          if (stage) {
-            stage.classList.remove("anim-run");
-            void stage.offsetWidth;
-            stage.classList.add("anim-run");
+          var on = btn.getAttribute("aria-pressed") === "true";
+          if (on) {
+            panel.hidden = true;
+            btn.setAttribute("aria-expanded", "false");
+            btn.setAttribute("aria-pressed", "false");
+            if (stage) stage.classList.remove("anim-run");
+          } else {
+            panel.hidden = false;
+            btn.setAttribute("aria-expanded", "true");
+            btn.setAttribute("aria-pressed", "true");
+            if (stage) {
+              stage.classList.remove("anim-run");
+              void stage.offsetWidth;
+              stage.classList.add("anim-run");
+            }
           }
         });
       });
