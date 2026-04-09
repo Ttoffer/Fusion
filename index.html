@@ -1396,7 +1396,8 @@
   </main>
   <script>
     (function () {
-      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var mqReduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+      var reducedMotion = mqReduce.matches;
       var DT_MS = 6500;
       var pageT0 = performance.now();
 
@@ -1413,13 +1414,13 @@
       function updateTokamakPlasma(tSec) {
         document.querySelectorAll(".tok-plasma-root").forEach(function (root) {
           root.querySelectorAll(".tok-plasma-layer").forEach(function (layer) {
-            var period = parseFloat(layer.getAttribute("data-tok-period"), 10) || 18;
-            var dir = parseFloat(layer.getAttribute("data-tok-dir"), 10) || 1;
+            var period = parseFloat(layer.getAttribute("data-tok-period")) || 18;
+            var dir = parseFloat(layer.getAttribute("data-tok-dir")) || 1;
             var angle = ((tSec / period) * 360 * dir) % 360;
             layer.setAttribute("transform", "rotate(" + angle + ")");
           });
           root.querySelectorAll(".tok-plasma-dash").forEach(function (el) {
-            var spd = parseFloat(el.getAttribute("data-tok-dash-speed"), 10) || 25;
+            var spd = parseFloat(el.getAttribute("data-tok-dash-speed")) || 25;
             var off = -((tSec * spd) % 400);
             el.setAttribute("stroke-dashoffset", String(off));
           });
@@ -1691,6 +1692,35 @@
       var dtSvg = dtHost ? dtHost.querySelector("svg") : null;
       var dtRunning = false;
       var dtLoopStart = 0;
+
+      function resetTokamakPlasma() {
+        document.querySelectorAll(".tok-plasma-root").forEach(function (root) {
+          root.querySelectorAll(".tok-plasma-layer").forEach(function (layer) {
+            layer.removeAttribute("transform");
+          });
+          root.querySelectorAll(".tok-plasma-dash").forEach(function (el) {
+            el.setAttribute("stroke-dashoffset", "0");
+          });
+        });
+      }
+
+      function syncReducedMotion() {
+        reducedMotion = mqReduce.matches;
+        if (reducedMotion) {
+          dtRunning = false;
+          if (dtSvg) resetDtVisual(dtSvg);
+          resetTokamakPlasma();
+        } else if (dtHost && dtHost.classList.contains("dt-anim-run")) {
+          dtRunning = true;
+          dtLoopStart = performance.now();
+        }
+      }
+
+      if (mqReduce.addEventListener) {
+        mqReduce.addEventListener("change", syncReducedMotion);
+      } else if (mqReduce.addListener) {
+        mqReduce.addListener(syncReducedMotion);
+      }
 
       if (dtSvg) resetDtVisual(dtSvg);
 
