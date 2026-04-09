@@ -66,145 +66,119 @@
       box-shadow: 0 4px 22px rgba(0, 0, 0, 0.45);
       flex-shrink: 0;
     }
-    /* Tokamak plasma motion (inline SVG) */
-    .tok-swirl-cw {
-      transform-origin: 0 0;
-      animation: tok-plasma-cw 18s linear infinite;
-    }
-    .tok-swirl-ccw {
-      transform-origin: 0 0;
-      animation: tok-plasma-ccw 26s linear infinite;
-    }
-    .tok-swirl-cw--slow {
-      animation-duration: 24s;
-    }
-    .tok-swirl-ccw--slow {
-      animation-duration: 34s;
-    }
-    .tok-dash-flow {
-      animation: tok-plasma-dash 3.2s linear infinite;
-    }
-    .tok-dash-flow--slow {
-      animation: tok-plasma-dash 4.8s linear infinite;
-    }
-    @keyframes tok-plasma-cw {
-      to { transform: rotate(360deg); }
-    }
-    @keyframes tok-plasma-ccw {
-      to { transform: rotate(-360deg); }
-    }
-    @keyframes tok-plasma-dash {
-      to { stroke-dashoffset: -80; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .tok-swirl-cw,
-      .tok-swirl-ccw,
-      .tok-swirl-cw--slow,
-      .tok-swirl-ccw--slow,
-      .tok-dash-flow,
-      .tok-dash-flow--slow {
-        animation: none !important;
-      }
-    }
+    /* Tokamak plasma motion: SMIL inside SVG (reliable on iPad Safari; CSS transform on <g> is flaky there) */
 
     /* D–T fusion diagram (dramatic loop; enable with .dt-anim-run on host) */
     .diagram-wrap--dt.dt-anim-run svg .dt-d {
       transform-origin: 120px 100px;
-      animation: dt-d-anim 5.5s ease-in-out infinite;
+      animation: dt-d-anim 6.5s ease-in-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-t {
       transform-origin: 230px 100px;
-      animation: dt-t-anim 5.5s ease-in-out infinite;
+      animation: dt-t-anim 6.5s ease-in-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-plus-react {
       transform-origin: 175px 100px;
-      animation: dt-plus-react-anim 5.5s ease-in-out infinite;
+      animation: dt-plus-react-anim 6.5s ease-in-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-bridge {
-      transform-origin: 303px 100px;
-      animation: dt-bridge-anim 5.5s ease-in-out infinite;
+      transform-origin: 312px 100px;
+      animation: dt-bridge-anim 6.5s ease-in-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-flash-burst {
       transform-origin: 0 0;
-      animation: dt-burst-anim 5.5s ease-out infinite;
+      animation: dt-burst-anim 6.5s ease-out infinite;
+    }
+    .diagram-wrap--dt.dt-anim-run svg .dt-flash-halo {
+      transform-origin: 0 0;
+      animation: dt-halo-anim 6.5s ease-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-he {
       transform-origin: 450px 100px;
-      animation: dt-he-anim 5.5s ease-out infinite;
+      animation: dt-he-anim 6.5s ease-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-plus-prod {
       transform-origin: 518px 100px;
-      animation: dt-plus-prod-anim 5.5s ease-in-out infinite;
+      animation: dt-plus-prod-anim 6.5s ease-in-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-n {
       transform-origin: 590px 100px;
-      animation: dt-n-anim 5.5s ease-out infinite;
+      animation: dt-n-anim 6.5s ease-out infinite;
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-energy {
       transform-origin: 360px 178px;
-      animation: dt-energy-anim 5.5s ease-in-out infinite;
+      animation: dt-energy-anim 6.5s ease-in-out infinite;
     }
     @keyframes dt-d-anim {
       0%, 12% { transform: translate(0, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 0 transparent); }
-      22% { transform: translate(28px, 0) scale(1.14); filter: drop-shadow(0 0 16px rgba(77, 163, 255, 0.95)); }
-      32%, 38% { transform: translate(52px, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 10px rgba(77, 163, 255, 0.55)); }
-      41% { transform: translate(56px, 0); opacity: 0; }
-      42%, 100% { transform: translate(56px, 0); opacity: 0; }
+      22% { transform: translate(30px, 0) scale(1.18); filter: drop-shadow(0 0 22px rgba(120, 200, 255, 1)) drop-shadow(0 0 36px rgba(77, 163, 255, 0.65)); }
+      32%, 38% { transform: translate(54px, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 14px rgba(77, 163, 255, 0.75)); }
+      41% { transform: translate(58px, 0); opacity: 0; }
+      42%, 100% { transform: translate(58px, 0); opacity: 0; }
     }
     @keyframes dt-t-anim {
       0%, 12% { transform: translate(0, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 0 transparent); }
-      22% { transform: translate(-28px, 0) scale(1.14); filter: drop-shadow(0 0 16px rgba(200, 107, 255, 0.9)); }
-      32%, 38% { transform: translate(-52px, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 10px rgba(200, 107, 255, 0.5)); }
-      41% { transform: translate(-56px, 0); opacity: 0; }
-      42%, 100% { transform: translate(-56px, 0); opacity: 0; }
+      22% { transform: translate(-30px, 0) scale(1.18); filter: drop-shadow(0 0 22px rgba(230, 150, 255, 1)) drop-shadow(0 0 36px rgba(200, 107, 255, 0.7)); }
+      32%, 38% { transform: translate(-54px, 0) scale(1); opacity: 1; filter: drop-shadow(0 0 14px rgba(200, 107, 255, 0.7)); }
+      41% { transform: translate(-58px, 0); opacity: 0; }
+      42%, 100% { transform: translate(-58px, 0); opacity: 0; }
     }
     @keyframes dt-plus-react-anim {
-      0%, 18% { opacity: 1; transform: scale(1); }
-      26% { transform: scale(1.35); fill: #5cdbff; }
-      38%, 41% { opacity: 0; transform: scale(0.6); }
+      0%, 18% { opacity: 1; transform: scale(1); fill: #9aa8c4; }
+      26% { transform: scale(1.48); fill: #b8ffff; filter: drop-shadow(0 0 12px rgba(92, 219, 255, 0.95)); }
+      38%, 41% { opacity: 0; transform: scale(0.55); filter: none; }
       42%, 100% { opacity: 0; }
     }
     @keyframes dt-bridge-anim {
-      0%, 16% { opacity: 0.65; }
-      26% { opacity: 1; }
-      34%, 38% { opacity: 1; filter: drop-shadow(0 0 6px rgba(92, 219, 255, 0.8)); }
-      48%, 100% { opacity: 0.92; filter: none; }
+      0%, 15% { opacity: 0.58; }
+      24% { opacity: 1; }
+      30%, 42% { opacity: 1; filter: drop-shadow(0 0 10px rgba(92, 219, 255, 0.95)) drop-shadow(0 0 22px rgba(255, 255, 255, 0.35)); }
+      52%, 100% { opacity: 0.94; filter: none; }
     }
     .diagram-wrap--dt.dt-anim-run svg .dt-arrow-line {
-      animation: dt-arrow-stroke 5.5s ease-in-out infinite;
+      animation: dt-arrow-stroke 6.5s ease-in-out infinite;
     }
     @keyframes dt-arrow-stroke {
-      0%, 20% { stroke: #6b7a9e; stroke-width: 2; }
-      32% { stroke: #5cdbff; stroke-width: 3.2; }
-      38% { stroke: #ffffff; stroke-width: 3.6; filter: drop-shadow(0 0 4px #5cdbff); }
-      50%, 100% { stroke: #6b7a9e; stroke-width: 2; filter: none; }
+      0%, 18% { stroke: #5a6a8e; stroke-width: 2.2; }
+      28% { stroke: #7ee8ff; stroke-width: 3.8; filter: drop-shadow(0 0 6px rgba(92, 219, 255, 0.9)); }
+      34%, 40% { stroke: #ffffff; stroke-width: 4.4; filter: drop-shadow(0 0 10px #5cdbff) drop-shadow(0 0 18px rgba(255, 255, 255, 0.55)); }
+      52%, 100% { stroke: #6b7a9e; stroke-width: 2; filter: none; }
     }
     @keyframes dt-burst-anim {
-      0%, 33% { opacity: 0; transform: scale(0.2); }
-      36% { opacity: 1; transform: scale(1); fill: #ffffff; }
-      39% { opacity: 0.9; transform: scale(7); fill: #5cdbff; }
-      44%, 100% { opacity: 0; transform: scale(11); fill: #b8a0ff; }
+      0%, 31% { opacity: 0; transform: scale(0.12); }
+      34% { opacity: 1; transform: scale(1); fill: #ffffff; }
+      36% { opacity: 1; transform: scale(4.5); fill: #e8ffff; }
+      39% { opacity: 1; transform: scale(8.5); fill: #5cdbff; }
+      42% { opacity: 0.92; transform: scale(12); fill: #c8a8ff; }
+      45% { opacity: 0.55; transform: scale(14.5); fill: #ffd54a; }
+      50%, 100% { opacity: 0; transform: scale(17); fill: #5cdbff; }
+    }
+    @keyframes dt-halo-anim {
+      0%, 30% { opacity: 0; transform: scale(0.5); }
+      35% { opacity: 0.85; transform: scale(2.2); stroke: rgba(180, 240, 255, 0.9); }
+      41% { opacity: 0.5; transform: scale(5); stroke: rgba(92, 219, 255, 0.45); }
+      48%, 100% { opacity: 0; transform: scale(7); }
     }
     @keyframes dt-he-anim {
-      0%, 38% { opacity: 0; transform: scale(0.35) translate(-8px, 0); filter: drop-shadow(0 0 0 transparent); }
-      43% { opacity: 1; transform: scale(1.28) translate(0, 0); filter: drop-shadow(0 0 26px rgba(184, 160, 255, 0.95)); }
-      52% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(184, 160, 255, 0.5)); }
-      100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 6px rgba(184, 160, 255, 0.35)); }
+      0%, 38% { opacity: 0; transform: scale(0.32) translate(-10px, 0); filter: drop-shadow(0 0 0 transparent); }
+      43% { opacity: 1; transform: scale(1.32) translate(0, 0); filter: drop-shadow(0 0 32px rgba(220, 200, 255, 1)) drop-shadow(0 0 48px rgba(184, 160, 255, 0.65)); }
+      52% { transform: scale(1); filter: drop-shadow(0 0 16px rgba(184, 160, 255, 0.65)); }
+      100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 10px rgba(184, 160, 255, 0.45)); }
     }
     @keyframes dt-plus-prod-anim {
-      0%, 40% { opacity: 0.4; transform: scale(0.8); }
-      48%, 100% { opacity: 1; transform: scale(1); }
+      0%, 40% { opacity: 0.35; transform: scale(0.75); }
+      48%, 100% { opacity: 1; transform: scale(1); fill: #d0e4ff; }
     }
     @keyframes dt-n-anim {
-      0%, 40% { opacity: 0; transform: scale(0.35) translate(-24px, 0); filter: none; }
-      46% { opacity: 1; transform: scale(1.22) translate(6px, 0); filter: drop-shadow(0 0 18px rgba(154, 168, 196, 0.9)); }
-      54% { transform: scale(1) translate(0, 0); filter: drop-shadow(0 0 8px rgba(154, 168, 196, 0.45)); }
-      100% { opacity: 1; transform: scale(1); }
+      0%, 40% { opacity: 0; transform: scale(0.32) translate(-28px, 0); filter: none; }
+      46% { opacity: 1; transform: scale(1.28) translate(8px, 0); filter: drop-shadow(0 0 24px rgba(220, 230, 255, 0.95)) drop-shadow(0 0 14px rgba(154, 168, 196, 0.8)); }
+      54% { transform: scale(1) translate(0, 0); filter: drop-shadow(0 0 12px rgba(154, 168, 196, 0.55)); }
+      100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 8px rgba(154, 168, 196, 0.4)); }
     }
     @keyframes dt-energy-anim {
-      0%, 44% { fill: #5cdbff; opacity: 0.88; }
-      50% { fill: #ffffff; opacity: 1; filter: drop-shadow(0 0 14px rgba(92, 219, 255, 0.85)); }
-      58%, 100% { fill: #5cdbff; opacity: 1; filter: none; }
+      0%, 43% { fill: #6ee8ff; opacity: 0.9; }
+      49% { fill: #ffffff; opacity: 1; filter: drop-shadow(0 0 18px rgba(92, 219, 255, 1)) drop-shadow(0 0 28px rgba(255, 214, 90, 0.45)); }
+      57%, 100% { fill: #5cdbff; opacity: 1; filter: none; }
     }
     @media (prefers-reduced-motion: reduce) {
       .diagram-wrap--dt svg .dt-d,
@@ -212,6 +186,7 @@
       .diagram-wrap--dt svg .dt-plus-react,
       .diagram-wrap--dt svg .dt-bridge,
       .diagram-wrap--dt svg .dt-flash-burst,
+      .diagram-wrap--dt svg .dt-flash-halo,
       .diagram-wrap--dt svg .dt-he,
       .diagram-wrap--dt svg .dt-plus-prod,
       .diagram-wrap--dt svg .dt-n,
@@ -230,7 +205,8 @@
         transform: none !important;
         filter: none !important;
       }
-      .diagram-wrap--dt svg .dt-flash-burst {
+      .diagram-wrap--dt svg .dt-flash-burst,
+      .diagram-wrap--dt svg .dt-flash-halo {
         opacity: 0 !important;
         transform: none !important;
       }
@@ -1419,16 +1395,22 @@
         <ellipse cx="540" cy="118" rx="72" ry="36" fill="rgba(200,107,255,0.15)" stroke="#c86bff" stroke-width="2"/>
         <ellipse cx="540" cy="118" rx="95" ry="48" fill="none" stroke="#5cdbff" stroke-width="1" opacity="0.5"/>
         <g transform="translate(540,118)" aria-hidden="true">
-          <g class="tok-swirl-cw">
-            <ellipse cx="0" cy="0" rx="82" ry="41" fill="none" stroke="rgba(92,219,255,0.5)" stroke-width="1.6" stroke-dasharray="14 20" class="tok-dash-flow"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="18s" repeatCount="indefinite" additive="replace" data-tok-plasma="1"/>
+            <ellipse cx="0" cy="0" rx="82" ry="41" fill="none" stroke="rgba(92,219,255,0.5)" stroke-width="1.6" stroke-dasharray="14 20" stroke-dashoffset="0">
+              <animate attributeName="stroke-dashoffset" from="0" to="-80" dur="3.2s" repeatCount="indefinite" calcMode="linear" data-tok-plasma="1"/>
+            </ellipse>
             <path d="M-68,0 A68,34 0 0,1 68,0" fill="none" stroke="rgba(92,219,255,0.55)" stroke-width="1.15"/>
             <path d="M-62,9 A62,31 0 0,1 62,9" fill="none" stroke="rgba(200,107,255,0.42)" stroke-width="0.95"/>
             <path d="M-65,-10 A64,33 0 0,0 65,-10" fill="none" stroke="rgba(255,214,90,0.28)" stroke-width="0.85"/>
           </g>
-          <g class="tok-swirl-ccw">
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur="26s" repeatCount="indefinite" additive="replace" data-tok-plasma="1"/>
             <path d="M-56,-18 Q0,-44 56,-18" fill="none" stroke="rgba(92,219,255,0.38)" stroke-width="1"/>
             <path d="M-56,18 Q0,44 56,18" fill="none" stroke="rgba(200,107,255,0.32)" stroke-width="0.9"/>
-            <ellipse cx="0" cy="0" rx="76" ry="38" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" stroke-dasharray="4 18" class="tok-dash-flow--slow"/>
+            <ellipse cx="0" cy="0" rx="76" ry="38" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1.2" stroke-dasharray="4 18" stroke-dashoffset="0">
+              <animate attributeName="stroke-dashoffset" from="0" to="-80" dur="4.8s" repeatCount="indefinite" calcMode="linear" data-tok-plasma="1"/>
+            </ellipse>
           </g>
         </g>
         <text x="540" y="122" text-anchor="middle" fill="#e8ecf4" font-size="11" font-family="Segoe UI, sans-serif">plasma</text>
@@ -1458,9 +1440,9 @@
     <div id="anim-dt" class="diagram-wrap diagram-wrap--dt anim-inline-host" role="img" aria-label="Diagram: D and T nuclei fuse to helium-4 and neutron releasing energy. Use the Motion control to play or stop the reaction animation.">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200">
         <defs>
-          <marker id="arr-dt" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e"/></marker>
+          <marker id="arr-dt" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0,0 L11,5.5 L0,11 Z" fill="#6b7a9e"/></marker>
         </defs>
-        <text x="360" y="24" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Deuterium–tritium fusion (main candidate for first power reactors)</text>
+        <text x="360" y="24" text-anchor="middle" fill="#b8c8e8" font-size="14" font-weight="600" font-family="Segoe UI, sans-serif">Deuterium–tritium fusion (main candidate for first power reactors)</text>
         <g class="dt-d">
           <circle cx="120" cy="100" r="26" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
           <text x="120" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">²H</text>
@@ -1473,11 +1455,12 @@
           <text x="230" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">tritium</text>
         </g>
         <g class="dt-bridge">
-          <line class="dt-arrow-line" x1="268" y1="100" x2="338" y2="100" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arr-dt)"/>
-          <text x="303" y="92" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">fusion</text>
+          <line class="dt-arrow-line" x1="262" y1="100" x2="362" y2="100" stroke="#6b7a9e" stroke-width="2.2" marker-end="url(#arr-dt)"/>
+          <text x="312" y="90" text-anchor="middle" fill="#c5d8f0" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">fusion</text>
         </g>
-        <g transform="translate(303,100)" aria-hidden="true">
-          <circle class="dt-flash-burst" cx="0" cy="0" r="10" fill="#ffffff" opacity="0"/>
+        <g transform="translate(312,100)" aria-hidden="true">
+          <circle class="dt-flash-halo" cx="0" cy="0" r="28" fill="none" stroke="rgba(92,219,255,0.55)" stroke-width="2.5" opacity="0"/>
+          <circle class="dt-flash-burst" cx="0" cy="0" r="14" fill="#ffffff" opacity="0"/>
         </g>
         <g class="dt-he">
           <ellipse cx="450" cy="100" rx="44" ry="32" fill="rgba(184,160,255,0.2)" stroke="#b8a0ff" stroke-width="2"/>
@@ -1510,14 +1493,20 @@
         <ellipse cx="360" cy="172" rx="118" ry="46" fill="none" stroke="#c86bff" stroke-width="16" stroke-opacity="0.35"/>
         <ellipse cx="360" cy="172" rx="110" ry="40" fill="none" stroke="#c86bff" stroke-width="2" opacity="0.9"/>
         <g transform="translate(360,172)" aria-hidden="true">
-          <g class="tok-swirl-cw tok-swirl-cw--slow">
-            <ellipse cx="0" cy="0" rx="112" ry="42" fill="none" stroke="rgba(92,219,255,0.5)" stroke-width="2" stroke-dasharray="6 14 4 14" class="tok-dash-flow"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="24s" repeatCount="indefinite" additive="replace" data-tok-plasma="1"/>
+            <ellipse cx="0" cy="0" rx="112" ry="42" fill="none" stroke="rgba(92,219,255,0.5)" stroke-width="2" stroke-dasharray="6 14 4 14" stroke-dashoffset="0">
+              <animate attributeName="stroke-dashoffset" from="0" to="-80" dur="3.2s" repeatCount="indefinite" calcMode="linear" data-tok-plasma="1"/>
+            </ellipse>
             <path d="M-112,0 A112,42 0 0,1 112,0" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="3.5" stroke-linecap="round"/>
             <path d="M-102,0 A102,38 0 0,0 102,0" fill="none" stroke="rgba(200,107,255,0.4)" stroke-width="1.3"/>
             <path d="M-108,12 A108,40 0 0,1 108,12" fill="none" stroke="rgba(92,219,255,0.28)" stroke-width="1"/>
           </g>
-          <g class="tok-swirl-ccw tok-swirl-ccw--slow">
-            <ellipse cx="0" cy="0" rx="100" ry="38" fill="none" stroke="rgba(200,107,255,0.3)" stroke-width="1.2" stroke-dasharray="22 28" class="tok-dash-flow--slow"/>
+          <g>
+            <animateTransform attributeName="transform" type="rotate" from="0" to="-360" dur="34s" repeatCount="indefinite" additive="replace" data-tok-plasma="1"/>
+            <ellipse cx="0" cy="0" rx="100" ry="38" fill="none" stroke="rgba(200,107,255,0.3)" stroke-width="1.2" stroke-dasharray="22 28" stroke-dashoffset="0">
+              <animate attributeName="stroke-dashoffset" from="0" to="-80" dur="4.8s" repeatCount="indefinite" calcMode="linear" data-tok-plasma="1"/>
+            </ellipse>
             <path d="M-92,-22 Q0,-52 92,-22" fill="none" stroke="rgba(92,219,255,0.25)" stroke-width="1.1"/>
             <path d="M-92,22 Q0,52 92,22" fill="none" stroke="rgba(255,214,90,0.2)" stroke-width="1"/>
           </g>
@@ -1561,6 +1550,11 @@
   </main>
   <script>
     (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll("[data-tok-plasma]").forEach(function (el) {
+          el.remove();
+        });
+      }
       document.querySelectorAll(".anim-toggle").forEach(function (btn) {
         btn.addEventListener("click", function () {
           var id = btn.getAttribute("data-target");
