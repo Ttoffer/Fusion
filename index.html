@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Solar_Fusion.html</title>
+  <style>
+    :root {
+      --bg: #0c1222;
+      --panel: #151d32;
+      --text: #e8ecf4;
+      --muted: #9aa8c4;
+      --up: #4da3ff;
+      --down: #ff8c42;
+      --w: #c86bff;
+      --positron: #5ce0a8;
+      --neutrino: #ffd54a;
+      --photon: #5cdbff;
+      --border: #2a3a5c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(ellipse 120% 80% at 50% -20%, #1a2744 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 2rem clamp(1rem, 4vw, 3rem);
+    }
+    main {
+      max-width: 52rem;
+      margin: 0 auto;
+    }
+    .page-brand {
+      margin-bottom: 1.35rem;
+      text-align: center;
+    }
+    .brand-logo {
+      max-width: min(340px, 92vw);
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
+    }
+    h1 {
+      font-weight: 600;
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.35rem;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+    }
+    .diagram-wrap {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      overflow-x: auto;
+    }
+    .diagram-wrap svg {
+      display: block;
+      margin: 0 auto;
+      max-width: 100%;
+      height: auto;
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      justify-content: center;
+    }
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+      color: #c5d4f0;
+    }
+    p { margin: 0.85rem 0; }
+    .note {
+      border-left: 3px solid var(--w);
+      padding: 0.75rem 1rem;
+      margin: 1.5rem 0;
+      background: rgba(200, 107, 255, 0.08);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .note-energy {
+      border-left: 3px solid var(--photon);
+      background: rgba(92, 219, 255, 0.08);
+    }
+    .snippets {
+      margin: 2rem 0;
+      padding: 1.1rem 1.25rem;
+      background: rgba(92, 219, 255, 0.06);
+      border: 1px solid rgba(92, 219, 255, 0.25);
+      border-radius: 10px;
+    }
+    .snippets h2 {
+      margin-top: 0;
+    }
+    .snippets ul {
+      margin: 0.5rem 0 0;
+      padding-left: 1.2rem;
+    }
+    .snippets li {
+      margin: 0.65rem 0;
+    }
+    .snippets .lead {
+      color: #c5d4f0;
+      font-weight: 600;
+    }
+    code, .eq {
+      font-family: "Cascadia Code", "Consolas", monospace;
+      font-size: 0.92em;
+      background: rgba(0,0,0,0.25);
+      padding: 0.12em 0.4em;
+      border-radius: 4px;
+    }
+    ul { margin: 0.5rem 0 1rem 1.25rem; color: var(--muted); }
+    li { margin: 0.35rem 0; }
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* --- motion diagrams (toggle) --- */
+    .anim-controls {
+      margin-top: 0.75rem;
+      text-align: center;
+    }
+    .anim-btn {
+      background: #243054;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      font: inherit;
+      font-size: 0.92rem;
+      cursor: pointer;
+    }
+    .anim-btn:hover {
+      background: #2c3a66;
+      border-color: #3d5080;
+    }
+    .anim-btn:focus-visible {
+      outline: 2px solid var(--photon);
+      outline-offset: 2px;
+    }
+    .anim-panel {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--border);
+    }
+    .anim-hint {
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: center;
+      margin: 0 0 0.75rem;
+      line-height: 1.45;
+    }
+    .anim-stage {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      height: 200px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .anim-stage--tall {
+      height: 220px;
+    }
+    .ap {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      pointer-events: none;
+      opacity: 0;
+    }
+    .ap-p {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #1a3050;
+      border: 2px solid var(--up);
+      color: var(--text);
+    }
+    .ap-n {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #2a2418;
+      border: 2px dashed var(--down);
+      color: var(--text);
+      font-size: 10px;
+    }
+    .ap-wbox {
+      width: 46px;
+      height: 34px;
+      border-radius: 8px;
+      background: #2a1f3d;
+      border: 2px solid var(--w);
+      color: var(--w);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .ap-d {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 72px;
+      height: 46px;
+      border-radius: 10px;
+      background: rgba(26, 48, 80, 0.9);
+      border: 2px solid var(--up);
+      gap: 6px;
+      padding: 0 8px;
+      opacity: 0;
+    }
+    .ap-d .ap-mini {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: 700;
+    }
+    .ap-d .ap-mini-p {
+      background: var(--up);
+      color: #0c1222;
+    }
+    .ap-d .ap-mini-n {
+      background: var(--down);
+      color: #0c1222;
+      border: 1px dashed rgba(255, 255, 255, 0.35);
+    }
+    .ap-ep {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1a3d32;
+      border: 2px solid var(--positron);
+      color: var(--positron);
+      font-size: 10px;
+    }
+    .ap-nu {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #3d3518;
+      border: 2px solid var(--neutrino);
+      color: var(--neutrino);
+      font-size: 10px;
+    }
+    .ap-he3 {
+      width: 88px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid #7a9ee8;
+      background: rgba(21, 29, 50, 0.85);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      opacity: 0;
+    }
+    .ap-he4 {
+      width: 100px;
+      height: 64px;
+      border-radius: 50%;
+      border: 2px solid #b8a0ff;
+      background: rgba(31, 26, 50, 0.9);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      opacity: 0;
+    }
+    .ap-gamma {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--photon);
+      opacity: 0;
+      text-shadow: 0 0 12px rgba(92, 219, 255, 0.6);
+    }
+    .ap-flash {
+      left: 50%;
+      top: 50%;
+      width: 120px;
+      height: 120px;
+      margin-left: -60px;
+      margin-top: -60px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(184, 160, 255, 0.35) 0%, transparent 70%);
+      opacity: 0;
+    }
+    .anim-mass {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3rem;
+      height: 100%;
+      padding: 1rem 1rem 2.5rem;
+    }
+    .anim-mass-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .anim-mass-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+      max-width: 8rem;
+    }
+    .anim-mass-bar {
+      width: 56px;
+      border-radius: 6px 6px 0 0;
+      background: linear-gradient(180deg, #4da3ff 0%, #2a5080 100%);
+      transform-origin: bottom center;
+    }
+    .anim-mass-bar--before {
+      height: 110px;
+    }
+    .anim-mass-bar--after {
+      height: 110px;
+      background: linear-gradient(180deg, #b8a0ff 0%, #5a4a80 100%);
+    }
+    .anim-mass-delta {
+      position: absolute;
+      left: 50%;
+      bottom: 0.35rem;
+      transform: translateX(-50%);
+      font-size: 0.78rem;
+      color: var(--photon);
+      font-weight: 600;
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    /* weak: p + p → ²H + e⁺ + ν */
+    .anim-stage--weak .ap-p1 { left: 8%; top: 50%; margin-top: -20px; }
+    .anim-stage--weak .ap-p2 { left: 22%; top: 50%; margin-top: -20px; }
+    .anim-stage--weak .ap-wbox { left: 50%; top: 12%; margin-left: -23px; }
+    .anim-stage--weak .ap-d { left: 50%; top: 50%; margin-left: -36px; margin-top: -23px; }
+    .anim-stage--weak .ap-ep { left: 50%; top: 50%; margin-left: -18px; margin-top: -18px; }
+    .anim-stage--weak .ap-nu { left: 50%; top: 50%; margin-left: -18px; margin-top: -18px; }
+
+    .anim-stage--weak.anim-run .ap-p1 {
+      animation: weak-p1 9s ease-in-out forwards;
+    }
+    .anim-stage--weak.anim-run .ap-p2 {
+      animation: weak-p2 9s ease-in-out forwards;
+    }
+    .anim-stage--weak.anim-run .ap-wbox {
+      animation: weak-w 9s ease-in-out forwards;
+    }
+    .anim-stage--weak.anim-run .ap-d {
+      animation: weak-d 9s ease-in-out forwards;
+    }
+    .anim-stage--weak.anim-run .ap-ep {
+      animation: weak-ep 9s ease-in-out forwards;
+    }
+    .anim-stage--weak.anim-run .ap-nu {
+      animation: weak-nu 9s ease-in-out forwards;
+    }
+
+    @keyframes weak-p1 {
+      0% { opacity: 1; transform: translate(0, 0); }
+      28% { opacity: 1; transform: translate(56px, 0); }
+      32% { opacity: 0; transform: translate(64px, 0); }
+      100% { opacity: 0; }
+    }
+    @keyframes weak-p2 {
+      0% { opacity: 1; transform: translate(0, 0); }
+      28% { opacity: 1; transform: translate(36px, 0); }
+      32% { opacity: 0; transform: translate(42px, 0); }
+      100% { opacity: 0; }
+    }
+    @keyframes weak-w {
+      0%, 18% { opacity: 0; transform: scale(0.6); }
+      24% { opacity: 1; transform: scale(1); }
+      36% { opacity: 0; transform: scale(0.85); }
+      100% { opacity: 0; }
+    }
+    @keyframes weak-d {
+      0%, 30% { opacity: 0; transform: scale(0.85); }
+      36% { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes weak-ep {
+      0%, 34% { opacity: 0; transform: translate(0, 0); }
+      38% { opacity: 1; transform: translate(0, 0); }
+      100% { opacity: 1; transform: translate(-120px, 72px); }
+    }
+    @keyframes weak-nu {
+      0%, 34% { opacity: 0; transform: translate(0, 0); }
+      38% { opacity: 1; transform: translate(0, 0); }
+      100% { opacity: 1; transform: translate(110px, 68px); }
+    }
+
+    @media (min-width: 700px) {
+      @keyframes weak-p1 {
+        0% { opacity: 1; transform: translate(0, 0); }
+        28% { opacity: 1; transform: translate(140px, 0); }
+        32% { opacity: 0; transform: translate(155px, 0); }
+        100% { opacity: 0; }
+      }
+      @keyframes weak-p2 {
+        0% { opacity: 1; transform: translate(0, 0); }
+        28% { opacity: 1; transform: translate(85px, 0); }
+        32% { opacity: 0; transform: translate(95px, 0); }
+        100% { opacity: 0; }
+      }
+    }
+
+    /* ²H + p → ³He + γ */
+    .anim-stage--he3 .ap-bundle-d {
+      left: 6%;
+      top: 50%;
+      margin-top: -22px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      width: auto;
+      height: auto;
+      background: none;
+      border: none;
+      padding: 0;
+      opacity: 1;
+    }
+    .bd-p,
+    .bd-n {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 10px;
+      font-weight: 700;
+      font-family: "Segoe UI", system-ui, sans-serif;
+    }
+    .bd-p {
+      width: 36px;
+      height: 36px;
+      background: var(--up);
+      color: #0c1222;
+      border: 2px solid #7ec4ff;
+    }
+    .bd-n {
+      width: 32px;
+      height: 32px;
+      background: var(--down);
+      color: #0c1222;
+      border: 2px dashed rgba(255, 255, 255, 0.35);
+    }
+    .anim-stage--he3 .ap-loose-p { left: 28%; top: 50%; margin-top: -20px; opacity: 1; }
+    .anim-stage--he3 .ap-he3 { left: 58%; top: 50%; margin-top: -28px; margin-left: -44px; }
+    .anim-stage--he3 .ap-gamma { left: 82%; top: 42%; margin-left: -12px; }
+
+    .anim-stage--he3.anim-run .ap-bundle-d {
+      animation: he3-d 8s ease-in-out forwards;
+    }
+    .anim-stage--he3.anim-run .ap-loose-p {
+      animation: he3-p 8s ease-in-out forwards;
+    }
+    .anim-stage--he3.anim-run .ap-he3 {
+      animation: he3-out 8s ease-in-out forwards;
+    }
+    .anim-stage--he3.anim-run .ap-gamma {
+      animation: he3-g 8s ease-in-out forwards;
+    }
+
+    @keyframes he3-d {
+      0% { transform: translate(0, 0); opacity: 1; }
+      38% { transform: translate(180px, 0); opacity: 1; }
+      45% { transform: translate(180px, 0); opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes he3-p {
+      0% { transform: translate(0, 0); opacity: 1; }
+      38% { transform: translate(150px, 0); opacity: 1; }
+      45% { transform: translate(150px, 0); opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes he3-out {
+      0%, 40% { opacity: 0; transform: scale(0.7); }
+      48% { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes he3-g {
+      0%, 46% { opacity: 0; transform: scale(0.5); }
+      52% { opacity: 1; transform: scale(1.1); }
+      60%, 100% { opacity: 1; transform: scale(1); }
+    }
+
+    @media (min-width: 700px) {
+      @keyframes he3-d {
+        0% { transform: translate(0, 0); opacity: 1; }
+        38% { transform: translate(200px, 0); opacity: 1; }
+        45% { transform: translate(200px, 0); opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes he3-p {
+        0% { transform: translate(0, 0); opacity: 1; }
+        38% { transform: translate(165px, 0); opacity: 1; }
+        45% { transform: translate(165px, 0); opacity: 0; }
+        100% { opacity: 0; }
+      }
+    }
+
+    /* ³He + ³He → ⁴He + p + p */
+    .anim-stage--he4 .ap-he3a { left: 6%; top: 50%; margin-top: -28px; opacity: 1; font-size: 11px; }
+    .anim-stage--he4 .ap-he3b { left: 24%; top: 50%; margin-top: -28px; opacity: 1; font-size: 11px; }
+    .anim-stage--he4 .ap-he4 { left: 52%; top: 50%; margin-top: -32px; margin-left: -50px; }
+    .anim-stage--he4 .ap-pr1 { left: 52%; top: 38%; opacity: 0; }
+    .anim-stage--he4 .ap-pr2 { left: 52%; top: 62%; opacity: 0; }
+    .anim-stage--he4 .ap-flash { z-index: 2; }
+
+    .anim-stage--he4.anim-run .ap-he3a {
+      animation: he4-a 9s ease-in-out forwards;
+    }
+    .anim-stage--he4.anim-run .ap-he3b {
+      animation: he4-b 9s ease-in-out forwards;
+    }
+    .anim-stage--he4.anim-run .ap-flash {
+      animation: he4-flash 9s ease-in-out forwards;
+    }
+    .anim-stage--he4.anim-run .ap-he4 {
+      animation: he4-core 9s ease-in-out forwards;
+    }
+    .anim-stage--he4.anim-run .ap-pr1 {
+      animation: he4-p1 9s ease-in-out forwards;
+    }
+    .anim-stage--he4.anim-run .ap-pr2 {
+      animation: he4-p2 9s ease-in-out forwards;
+    }
+
+    @keyframes he4-a {
+      0% { transform: translate(0, 0); opacity: 1; }
+      32% { transform: translate(120px, 0); opacity: 1; }
+      38% { transform: translate(120px, 0); opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes he4-b {
+      0% { transform: translate(0, 0); opacity: 1; }
+      32% { transform: translate(72px, 0); opacity: 1; }
+      38% { transform: translate(72px, 0); opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes he4-flash {
+      0%, 30% { opacity: 0; }
+      34% { opacity: 0.9; }
+      42% { opacity: 0; }
+      100% { opacity: 0; }
+    }
+    @keyframes he4-core {
+      0%, 36% { opacity: 0; transform: scale(0.6); }
+      44% { opacity: 1; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes he4-p1 {
+      0%, 40% { opacity: 0; transform: translate(0, 0); }
+      44% { opacity: 1; transform: translate(0, 0); }
+      100% { opacity: 1; transform: translate(160px, -32px); }
+    }
+    @keyframes he4-p2 {
+      0%, 40% { opacity: 0; transform: translate(0, 0); }
+      44% { opacity: 1; transform: translate(0, 0); }
+      100% { opacity: 1; transform: translate(160px, 32px); }
+    }
+
+    @media (min-width: 700px) {
+      @keyframes he4-a {
+        0% { transform: translate(0, 0); opacity: 1; }
+        32% { transform: translate(175px, 0); opacity: 1; }
+        38% { transform: translate(175px, 0); opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes he4-b {
+        0% { transform: translate(0, 0); opacity: 1; }
+        32% { transform: translate(115px, 0); opacity: 1; }
+        38% { transform: translate(115px, 0); opacity: 0; }
+        100% { opacity: 0; }
+      }
+      @keyframes he4-p1 {
+        0%, 40% { opacity: 0; transform: translate(0, 0); }
+        44% { opacity: 1; transform: translate(0, 0); }
+        100% { opacity: 1; transform: translate(220px, -36px); }
+      }
+      @keyframes he4-p2 {
+        0%, 40% { opacity: 0; transform: translate(0, 0); }
+        44% { opacity: 1; transform: translate(0, 0); }
+        100% { opacity: 1; transform: translate(220px, 36px); }
+      }
+    }
+
+    /* mass defect pulse */
+    .anim-stage--mass .anim-mass-bar--before { opacity: 1; }
+    .anim-stage--mass .anim-mass-bar--after {
+      opacity: 1;
+      transform: scaleY(1);
+    }
+    .anim-stage--mass.anim-run .anim-mass-bar--after {
+      animation: mass-shrink 7s ease-in-out forwards;
+    }
+    .anim-stage--mass.anim-run .anim-mass-delta {
+      animation: mass-delta 7s ease-in-out forwards;
+    }
+
+    @keyframes mass-shrink {
+      0%, 15% { transform: scaleY(1); }
+      45% { transform: scaleY(0.72); }
+      100% { transform: scaleY(0.72); }
+    }
+    @keyframes mass-delta {
+      0%, 38% { opacity: 0; }
+      48% { opacity: 1; }
+      100% { opacity: 1; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .anim-controls {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="page-brand">
+      <img src="cjf-hal-ai-logo-futuristic.png" alt="CJF Hal AI" class="brand-logo" decoding="async" />
+    </header>
+    <h1>Solar fusion and the weak interaction</h1>
+    <p class="subtitle">Weak interaction, building helium-4 in the proton–proton chain, and why the Sun shines.</p>
+
+    <div class="diagram-wrap" role="img" aria-label="Diagram: proton with three quarks, W boson emission, neutron with three quark types, W decay to positron and neutrino">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 312" width="720" height="312">
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e" />
+          </marker>
+        </defs>
+
+        <!-- Title row -->
+        <text x="360" y="28" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Weak step in the proton–proton chain (schematic)</text>
+        <text x="360" y="46" text-anchor="middle" fill="#7a8aad" font-size="11" font-family="Segoe UI, sans-serif">Quark-level view inside one of the two protons in p + p → ²H + …</text>
+
+        <!-- Left: Proton (u u d) -->
+        <text x="120" y="58" text-anchor="middle" fill="#e8ecf4" font-size="16" font-weight="600" font-family="Segoe UI, sans-serif">Proton (p⁺)</text>
+        <text x="120" y="78" text-anchor="middle" fill="#9aa8c4" font-size="12" font-family="Segoe UI, sans-serif">quarks: u, u, d</text>
+        <circle cx="120" cy="145" r="42" fill="none" stroke="#4da3ff" stroke-width="2" opacity="0.5"/>
+        <circle cx="95" cy="130" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="95" y="134" text-anchor="middle" fill="#0c1222" font-size="11" font-weight="700" font-family="Segoe UI, sans-serif">u</text>
+        <circle cx="145" cy="130" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="145" y="134" text-anchor="middle" fill="#0c1222" font-size="11" font-weight="700" font-family="Segoe UI, sans-serif">u</text>
+        <circle cx="120" cy="165" r="14" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5"/>
+        <text x="120" y="169" text-anchor="middle" fill="#0c1222" font-size="11" font-weight="700" font-family="Segoe UI, sans-serif">d</text>
+
+        <!-- Arrow toward interaction -->
+        <line x1="168" y1="145" x2="248" y2="145" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="208" y="138" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">high-energy</text>
+        <text x="208" y="152" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">collision</text>
+
+        <!-- Center: W+ -->
+        <rect x="258" y="118" width="84" height="54" rx="10" fill="#2a1f3d" stroke="#c86bff" stroke-width="2"/>
+        <text x="300" y="152" text-anchor="middle" fill="#c86bff" font-size="18" font-weight="700" font-family="Segoe UI, sans-serif">W⁺</text>
+        <text x="300" y="188" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">weak boson</text>
+
+        <!-- W to neutron -->
+        <line x1="342" y1="145" x2="418" y2="145" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arrow)"/>
+        <text x="380" y="138" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">u → d</text>
+
+        <!-- Right: Neutron (u d d) -->
+        <text x="600" y="58" text-anchor="middle" fill="#e8ecf4" font-size="16" font-weight="600" font-family="Segoe UI, sans-serif">Neutron (n⁰)</text>
+        <text x="600" y="78" text-anchor="middle" fill="#9aa8c4" font-size="12" font-family="Segoe UI, sans-serif">quarks: u, d, d</text>
+        <circle cx="600" cy="145" r="42" fill="none" stroke="#ff8c42" stroke-width="2" stroke-dasharray="6 4" opacity="0.6"/>
+        <circle cx="575" cy="130" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="575" y="134" text-anchor="middle" fill="#0c1222" font-size="11" font-weight="700" font-family="Segoe UI, sans-serif">u</text>
+        <circle cx="625" cy="130" r="14" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5"/>
+        <text x="625" y="134" text-anchor="middle" fill="#0c1222" font-size="11" font-weight="700" font-family="Segoe UI, sans-serif">d</text>
+        <circle cx="600" cy="165" r="14" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5"/>
+        <text x="600" y="169" text-anchor="middle" fill="#0c1222" font-size="11" font-weight="700" font-family="Segoe UI, sans-serif">d</text>
+
+        <!-- W decay: fork to products; symbols inside circles, captions only below -->
+        <text x="418" y="200" text-anchor="start" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">decays (very short lifetime)</text>
+        <path d="M300 172 L300 200" fill="none" stroke="#6b7a9e" stroke-width="2" />
+        <path d="M300 200 L115 200" fill="none" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arrow)" />
+        <line x1="115" y1="200" x2="115" y2="206" stroke="#6b7a9e" stroke-width="2" />
+        <path d="M300 200 L318 200" fill="none" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arrow)" />
+        <line x1="318" y1="200" x2="318" y2="206" stroke="#6b7a9e" stroke-width="2" />
+
+        <!-- Positron: e⁺ centred in circle; “Positron” fully below rim -->
+        <circle cx="115" cy="236" r="30" fill="#1a3d32" stroke="#5ce0a8" stroke-width="2"/>
+        <text x="115" y="242" text-anchor="middle" fill="#5ce0a8" font-size="18" font-weight="700" font-family="Segoe UI, sans-serif" dominant-baseline="middle">e⁺</text>
+        <text x="115" y="282" text-anchor="middle" fill="#9aa8c4" font-size="12" font-family="Segoe UI, sans-serif">Positron</text>
+
+        <!-- Neutrino: νₑ in circle; two caption lines below, clear of glyph -->
+        <circle cx="318" cy="236" r="30" fill="#3d3518" stroke="#ffd54a" stroke-width="2"/>
+        <text x="318" y="242" text-anchor="middle" fill="#ffd54a" font-size="18" font-weight="700" font-family="Segoe UI, sans-serif" dominant-baseline="middle">νₑ</text>
+        <text x="318" y="282" text-anchor="middle" fill="#9aa8c4" font-size="12" font-family="Segoe UI, sans-serif">Neutrino</text>
+        <text x="318" y="298" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">(electron type)</text>
+      </svg>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--up)"></span> Up quark (u)</span>
+        <span><span class="dot" style="background:var(--down)"></span> Down quark (d)</span>
+        <span><span class="dot" style="background:var(--w); border:1px solid #c86bff"></span> W⁺ boson (weak force)</span>
+        <span><span class="dot" style="background:var(--positron)"></span> Positron (e⁺)</span>
+        <span><span class="dot" style="background:var(--neutrino)"></span> Neutrino (ν<sub>e</sub>)</span>
+      </div>
+      <div class="anim-controls">
+        <button type="button" class="anim-btn" data-target="anim-weak" aria-expanded="false" aria-controls="anim-weak">Show particle motion</button>
+      </div>
+      <div id="anim-weak" class="anim-panel" hidden>
+        <p class="anim-hint">Simplified sequence for <span class="eq">p + p → ²H + e⁺ + νₑ</span>. Two protons meet; a <strong>W⁺</strong> mediates the weak step; a <strong>deuterium</strong> nucleus appears; the W’s decay products <strong>fly outward</strong> (timing and distances not physical).</p>
+        <div class="anim-stage anim-stage--weak" aria-hidden="true">
+          <div class="ap ap-p ap-p1">p</div>
+          <div class="ap ap-p ap-p2">p</div>
+          <div class="ap ap-wbox">W⁺</div>
+          <div class="ap ap-d"><span class="ap-mini ap-mini-p">p</span><span class="ap-mini ap-mini-n">n</span></div>
+          <div class="ap ap-ep">e⁺</div>
+          <div class="ap ap-nu">νₑ</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Initial fusion phase — the weak step</h2>
+    <p>
+      In the Sun, hydrogen nuclei are protons. They do not stick together just by the strong nuclear force alone, because two protons alone are not a stable bound state at solar temperatures. The step that lets fusion proceed is <strong>weak</strong>: in <span class="eq">p + p → <sup>2</sup>H + e⁺ + ν<sub>e</sub></span>, <strong>one</strong> of the two colliding protons undergoes a flavour change — an <strong>up quark becomes a down quark</strong> — so that nucleon becomes a <strong>neutron</strong> bound with the other proton in deuterium. A proton is <span class="eq">uud</span>; a neutron is <span class="eq">udd</span> (one up, two down).
+    </p>
+    <p>
+      That flavour change is mediated by a <strong>W boson</strong> (in this process, a <strong>W⁺</strong>). The W does not travel far: it <strong>decays almost immediately</strong>. A common decay channel is into a <strong>positron</strong> (<span class="eq">e⁺</span>) and an <strong>electron neutrino</strong> (<span class="eq">ν<sub>e</sub></span>), which matches what you said.
+    </p>
+    <p>
+      In the full <strong>proton–proton (pp) chain</strong>, this weak step occurs when <strong>two protons interact</strong>; the result is a <strong>deuterium</strong> nucleus (one proton + one neutron), which can then capture another proton and later join other light nuclei until <strong>helium-4</strong> is formed. That neutron is an essential ingredient on the way to helium, even though helium itself is assembled over several further steps.
+    </p>
+
+    <div class="note">
+      <strong>Compact summary.</strong> Schematically, one piece of the story can be written as
+      <span class="eq">p + p → <sup>2</sup>H + e⁺ + ν<sub>e</sub></span>
+      (plus energy carried by the particles), where the weak interaction inside that interaction converts one proton into a neutron inside the deuterium nucleus.
+    </div>
+
+    <h2>Next stages: from deuterium to helium-4 (pp I branch)</h2>
+    <p>
+      After deuterium (<span class="eq"><sup>2</sup>H</span>) appears, further steps use the <strong>strong nuclear force</strong> (not the W boson). In the main pathway in the Sun, a deuterium nucleus captures another proton to make <strong>helium-3</strong> (<span class="eq"><sup>3</sup>He</span>), and two helium-3 nuclei then combine to make ordinary helium, <strong>helium-4</strong> (<span class="eq"><sup>4</sup>He</span>), while ejecting two protons back into the plasma. The diagrams below use the same “blobs for nucleons” style as the quark picture above: blue circles are protons, orange (dashed) circles are neutrons.
+    </p>
+
+    <div class="diagram-wrap" role="img" aria-label="Diagram: deuterium plus proton fuses to helium-3 and a gamma ray">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 248" width="720" height="248">
+        <defs>
+          <marker id="arr-he3" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e" />
+          </marker>
+        </defs>
+        <text x="360" y="26" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Step 2 — deuterium captures a proton</text>
+
+        <circle cx="70" cy="118" r="18" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
+        <text x="70" y="123" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="104" cy="118" r="18" fill="#2a2418" stroke="#ff8c42" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="104" y="123" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">n</text>
+        <text x="87" y="168" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">²H</text>
+        <text x="87" y="184" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">deuterium</text>
+
+        <text x="138" y="124" text-anchor="middle" fill="#9aa8c4" font-size="22" font-family="Segoe UI, sans-serif">+</text>
+
+        <circle cx="182" cy="118" r="20" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
+        <text x="182" y="124" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <text x="182" y="168" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">proton</text>
+
+        <line x1="218" y1="118" x2="288" y2="118" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arr-he3)"/>
+        <text x="253" y="108" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">strong</text>
+        <text x="253" y="140" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">interaction</text>
+
+        <ellipse cx="392" cy="118" rx="52" ry="40" fill="none" stroke="#7a9ee8" stroke-width="2" opacity="0.85"/>
+        <circle cx="372" cy="106" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="372" y="110" text-anchor="middle" fill="#0c1222" font-size="10" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="412" cy="106" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="412" y="110" text-anchor="middle" fill="#0c1222" font-size="10" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="392" cy="134" r="14" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="392" y="138" text-anchor="middle" fill="#0c1222" font-size="10" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <text x="392" y="188" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">³He</text>
+        <text x="392" y="204" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">helium-3 (2p + 1n)</text>
+
+        <text x="468" y="124" text-anchor="middle" fill="#9aa8c4" font-size="22" font-family="Segoe UI, sans-serif">+</text>
+
+        <path d="M512 95 L528 118 L512 141 M528 95 L544 118 L528 141 M544 95 L560 118 L544 141" fill="none" stroke="#5cdbff" stroke-width="2.5" stroke-linecap="round"/>
+        <text x="536" y="178" text-anchor="middle" fill="#5cdbff" font-size="16" font-weight="700" font-family="Segoe UI, sans-serif">γ</text>
+        <text x="536" y="198" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">gamma photon</text>
+        <text x="536" y="214" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">(electromagnetic energy)</text>
+      </svg>
+      <div class="legend">
+        <span><span class="dot" style="background:var(--up)"></span> Proton in nucleus (p)</span>
+        <span><span class="dot" style="background:var(--down)"></span> Neutron (n)</span>
+        <span><span class="dot" style="background:var(--photon); border:1px solid #5cdbff"></span> Gamma ray (γ)</span>
+      </div>
+      <div class="anim-controls">
+        <button type="button" class="anim-btn" data-target="anim-he3" aria-expanded="false" aria-controls="anim-he3">Show particle motion</button>
+      </div>
+      <div id="anim-he3" class="anim-panel" hidden>
+        <p class="anim-hint"><strong>²H</strong> and a <strong>proton</strong> move together; they fuse into <strong>³He</strong>; a <strong>gamma photon</strong> (energy) appears as the nucleus settles.</p>
+        <div class="anim-stage anim-stage--he3" aria-hidden="true">
+          <div class="ap ap-bundle-d">
+            <span class="bd-p">p</span>
+            <span class="bd-n">n</span>
+          </div>
+          <div class="ap ap-p ap-loose-p">p</div>
+          <div class="ap ap-he3">³He</div>
+          <div class="ap ap-gamma">γ</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="eq" style="display:block; text-align:center; margin:1rem 0; padding:0.6rem;">²H + p → ³He + γ</p>
+
+    <div class="diagram-wrap" role="img" aria-label="Diagram: two helium-3 nuclei fuse to helium-4 and two protons">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 288" width="720" height="288">
+        <defs>
+          <marker id="arr-he4" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e" />
+          </marker>
+        </defs>
+        <text x="360" y="26" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Step 3 — two helium-3 nuclei make helium-4</text>
+
+        <ellipse cx="118" cy="118" rx="46" ry="36" fill="none" stroke="#7a9ee8" stroke-width="2" opacity="0.85"/>
+        <circle cx="102" cy="108" r="12" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="102" y="112" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="134" cy="108" r="12" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="134" y="112" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="118" cy="128" r="12" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="118" y="132" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <text x="118" y="176" text-anchor="middle" fill="#9aa8c4" font-size="12" font-family="Segoe UI, sans-serif">³He</text>
+
+        <text x="178" y="122" text-anchor="middle" fill="#9aa8c4" font-size="22" font-family="Segoe UI, sans-serif">+</text>
+
+        <ellipse cx="248" cy="118" rx="46" ry="36" fill="none" stroke="#7a9ee8" stroke-width="2" opacity="0.85"/>
+        <circle cx="232" cy="108" r="12" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="232" y="112" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="264" cy="108" r="12" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="264" y="112" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="248" cy="128" r="12" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="248" y="132" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <text x="248" y="176" text-anchor="middle" fill="#9aa8c4" font-size="12" font-family="Segoe UI, sans-serif">³He</text>
+
+        <line x1="308" y1="118" x2="378" y2="118" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arr-he4)"/>
+        <text x="343" y="108" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">strong</text>
+        <text x="343" y="140" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">interaction</text>
+
+        <ellipse cx="492" cy="118" rx="56" ry="44" fill="none" stroke="#b8a0ff" stroke-width="2.5" opacity="0.9"/>
+        <circle cx="470" cy="102" r="13" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="470" y="106" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="514" cy="102" r="13" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="514" y="106" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="470" cy="134" r="13" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="470" y="138" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <circle cx="514" cy="134" r="13" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="514" y="138" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <text x="492" y="188" text-anchor="middle" fill="#e8ecf4" font-size="14" font-weight="600" font-family="Segoe UI, sans-serif">⁴He</text>
+        <text x="492" y="206" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">helium-4 (α particle)</text>
+
+        <text x="568" y="122" text-anchor="middle" fill="#9aa8c4" font-size="22" font-family="Segoe UI, sans-serif">+</text>
+
+        <circle cx="628" cy="98" r="17" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
+        <text x="628" y="103" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="628" cy="138" r="17" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
+        <text x="628" y="143" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <text x="668" y="122" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">two</text>
+        <text x="668" y="136" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">protons</text>
+        <text x="492" y="252" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Energy also emerges here as photons and faster-moving nuclei (not drawn to scale).</text>
+      </svg>
+      <div class="anim-controls">
+        <button type="button" class="anim-btn" data-target="anim-he4" aria-expanded="false" aria-controls="anim-he4">Show particle motion</button>
+      </div>
+      <div id="anim-he4" class="anim-panel" hidden>
+        <p class="anim-hint">Two <strong>³He</strong> nuclei collide; <strong>⁴He</strong> forms; two <strong>protons</strong> are kicked out and carry away energy (flash is symbolic).</p>
+        <div class="anim-stage anim-stage--he4" aria-hidden="true">
+          <div class="ap ap-he3 ap-he3a">³He</div>
+          <div class="ap ap-he3 ap-he3b">³He</div>
+          <div class="ap ap-flash"></div>
+          <div class="ap ap-he4">⁴He</div>
+          <div class="ap ap-p ap-pr1">p</div>
+          <div class="ap ap-p ap-pr2">p</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="eq" style="display:block; text-align:center; margin:1rem 0; padding:0.6rem;">³He + ³He → ⁴He + p + p</p>
+
+    <p>
+      Counting nucleons, two <span class="eq"><sup>3</sup>He</span> nuclei supply six nucleons; <span class="eq"><sup>4</sup>He</span> uses four, and the two ejected protons account for the other two — so charge and baryon number stay balanced. Those recycled protons can enter the chain again.
+    </p>
+
+    <div class="note">
+      <strong>Net effect (pp I, simplified).</strong> If you follow the bookkeeping over these steps (including the earlier <span class="eq">p + p → <sup>2</sup>H + e⁺ + ν<sub>e</sub></span> twice to feed step 2), the overall picture is often summarised as converting <strong>four protons</strong> into one <strong>helium-4 nucleus</strong>, along with positrons, neutrinos, and radiation — with a measurable <strong>mass decrease</strong> (see below).
+    </div>
+
+    <h2>Where the energy comes from</h2>
+    <p>
+      The Sun’s power is <strong>not</strong> mainly “from the W boson” in a direct sense; the W step is rare and slow, but it unlocks the chain. Most of the energy release is tied to how tightly nucleons are bound when they assemble into <strong>helium-4</strong>.
+    </p>
+    <p>
+      A helium-4 nucleus is extraordinarily stable. Over the dominant branch, <strong>net four protons</strong> are converted into one <strong>helium-4 nucleus</strong> (two protons are temporarily incorporated earlier and <strong>released again</strong> in the <span class="eq"><sup>3</sup>He + <sup>3</sup>He</span> step, so they re-enter the plasma and are not part of the net mass balance). Compare the rest mass of those <strong>four protons</strong> to the rest mass of the <strong>⁴He nucleus plus the positrons and neutrinos</strong> emitted in the weak steps: the <strong>products are slightly lighter</strong>. That missing mass is the <strong>mass defect</strong>; by <span class="eq">E = Δm c²</span> it appears as <strong>energy</strong> (photons, particle motion, and neutrino energy).
+    </p>
+    <p>
+      In practice that energy shows up as <strong>gamma photons</strong> (step 2 is explicit), as <strong>kinetic energy</strong> of the recoiling nuclei and ejected protons, and — in weak steps — as energy carried by <strong>neutrinos</strong> (which mostly leave the Sun without depositing heat) and by <strong>positrons</strong> that soon <strong>annihilate</strong> with electrons, yielding more photons. The thermal glow of the Sun is ultimately those photons and particle motions thermalised in the dense plasma.
+    </p>
+
+    <div class="diagram-wrap" role="img" aria-label="Diagram: reactant mass versus product mass, mass defect becomes energy">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 268" width="720" height="268">
+        <text x="360" y="28" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Energy from a smaller total rest mass after fusion (conceptual)</text>
+
+        <text x="168" y="58" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">Before (example: four protons)</text>
+        <rect x="88" y="72" width="160" height="118" rx="8" fill="#1a2744" stroke="#4da3ff" stroke-width="2" opacity="0.95"/>
+        <circle cx="128" cy="110" r="16" fill="#1a3050" stroke="#7ec4ff" stroke-width="2"/>
+        <text x="128" y="115" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="168" cy="110" r="16" fill="#1a3050" stroke="#7ec4ff" stroke-width="2"/>
+        <text x="168" y="115" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="148" cy="145" r="16" fill="#1a3050" stroke="#7ec4ff" stroke-width="2"/>
+        <text x="148" y="150" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="188" cy="145" r="16" fill="#1a3050" stroke="#7ec4ff" stroke-width="2"/>
+        <text x="188" y="150" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">p</text>
+        <text x="168" y="205" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">larger combined</text>
+        <text x="168" y="220" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">rest mass</text>
+
+        <text x="360" y="130" text-anchor="middle" fill="#ffd54a" font-size="28" font-family="Segoe UI, sans-serif">→</text>
+        <text x="360" y="158" text-anchor="middle" fill="#ffd54a" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">fusion</text>
+
+        <text x="552" y="58" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">After (helium-4 nucleus + …)</text>
+        <rect x="472" y="72" width="160" height="118" rx="8" fill="#1f1a32" stroke="#b8a0ff" stroke-width="2" opacity="0.95"/>
+        <circle cx="522" cy="115" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="522" y="119" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="552" cy="115" r="14" fill="#4da3ff" stroke="#7ec4ff" stroke-width="1.5"/>
+        <text x="552" y="119" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">p</text>
+        <circle cx="522" cy="142" r="14" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="522" y="146" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <circle cx="552" cy="142" r="14" fill="#ff8c42" stroke="#ffb380" stroke-width="1.5" stroke-dasharray="3 2"/>
+        <text x="552" y="146" text-anchor="middle" fill="#0c1222" font-size="9" font-weight="700" font-family="Segoe UI, sans-serif">n</text>
+        <text x="552" y="178" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">⁴He</text>
+        <text x="552" y="205" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">+ e⁺, ν, γ …</text>
+        <text x="552" y="220" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">smaller total</text>
+        <text x="552" y="235" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">rest mass</text>
+
+        <path d="M248 232 L472 232" fill="none" stroke="#5cdbff" stroke-width="2" stroke-dasharray="8 6"/>
+        <polygon points="472,232 460,226 460,238" fill="#5cdbff"/>
+        <text x="360" y="224" text-anchor="middle" fill="#5cdbff" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">Δm becomes E = Δm c²</text>
+        <text x="360" y="242" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">(photons, particle motion, neutrino energy — not to scale)</text>
+      </svg>
+      <div class="anim-controls">
+        <button type="button" class="anim-btn" data-target="anim-mass" aria-expanded="false" aria-controls="anim-mass">Animate mass → energy</button>
+      </div>
+      <div id="anim-mass" class="anim-panel" hidden>
+        <p class="anim-hint">The <strong>helium-4</strong> side has slightly <strong>less rest mass</strong> than the starting hydrogen nuclei (plus escaping light particles). That <strong>Δm</strong> is what becomes sunlight and heat via <span class="eq">E = Δm c²</span>.</p>
+        <div class="anim-stage anim-stage--mass anim-stage--tall" aria-hidden="true">
+          <div class="anim-mass">
+            <div class="anim-mass-col">
+              <div class="anim-mass-bar anim-mass-bar--before"></div>
+              <span class="anim-mass-label">Reactants (heavier)</span>
+            </div>
+            <div class="anim-mass-col">
+              <div class="anim-mass-bar anim-mass-bar--after"></div>
+              <span class="anim-mass-label">Products (lighter total)</span>
+            </div>
+          </div>
+          <div class="anim-mass-delta">Δm → energy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note note-energy">
+      <strong>Take-away.</strong> Helium-4 is such a deeply bound nucleus that forming it from hydrogen (via the pp chain) <strong>lowers</strong> the system’s rest mass. That difference drives the Sun: most heat and light come from <strong>electromagnetic radiation and plasma motion</strong> as those fusion steps run; neutrinos carry away a few percent of the total energy budget but hardly interact on their way out.
+    </div>
+
+    <div class="snippets">
+      <h2>Neutrinos, positrons, and other scale</h2>
+      <p style="margin-top:0.35rem;color:var(--muted);font-size:0.95rem">Round numbers for intuition — not exact to every decimal.</p>
+      <ul>
+        <li>
+          <span class="lead">Neutrinos through your hand.</span>
+          The Sun bathes Earth in electron neutrinos (and other flavours after oscillation) from fusion. The time-averaged flux is about <strong>sixty billion (6 × 10<sup>10</sup>) per square centimetre per second</strong>. An <strong>outstretched palm</strong> is roughly 80–120 cm² of area, so on the order of <strong>several trillion</strong> solar neutrinos traverse it <strong>every second</strong>. Because neutrinos barely interact with matter, almost all of them pass straight through; detecting them at all requires enormous, carefully shielded instruments.
+        </li>
+        <li>
+          <span class="lead">What happens to the positrons?</span>
+          Yes — a positron is the electron’s <strong>antiparticle</strong>. In the hot, dense solar plasma, positrons from the weak step soon meet <strong>electrons</strong>. The usual outcome is <strong>annihilation</strong>: <span class="eq">e⁺ + e⁻ → γ + γ</span> (two gamma photons when both start nearly at rest; each has an energy of <strong>511 keV</strong>, the rest mass of an electron). That energy is deposited locally and joins the general thermal bath of the core — it becomes part of the heat that ultimately drives convection and, over a very long random-walk, sunlight.
+        </li>
+        <li>
+          <span class="lead">Neutrinos vs sunlight delay.</span>
+          Neutrinos from the core stream out in <strong>seconds</strong> (reaching Earth in <strong>minutes</strong>), taking a few percent of the fusion power with them. The <strong>bulk</strong> of the energy stays in the plasma as photons and particle motion and <strong>random-walks</strong> toward the surface over a very long time — often quoted on the order of <strong>tens of thousands to about a million years</strong> — before it emerges as sunlight. So neutrino detectors can sample “the core now”; the light we see is the end of a much slower diffusion chain.
+        </li>
+        <li>
+          <span class="lead">Energy per “package” of helium.</span>
+          For the net conversion of <strong>four protons</strong> into a helium-4 nucleus (with the usual leptons and photons), the total energy released is about <strong>26.7 MeV</strong> — most of it as kinetic energy of nuclei and photons, a few percent carried away by neutrinos.
+        </li>
+        <li>
+          <span class="lead">How hot is “fusion hot”?</span>
+          The solar core is about <strong>15 million kelvin</strong> and enormously compressed. Even so, the <strong>proton–proton</strong> reaction is slow: only a tiny fraction of collisions tunnel close enough for the weak interaction to fire, which is why the Sun burns steadily for billions of years instead of flashing out.
+        </li>
+        <li>
+          <span class="lead">Mass loss.</span>
+          Because fusion energy ultimately escapes as radiation, the Sun loses rest mass at roughly <strong>4 × 10<sup>9</sup> kg s<sup>−1</sup></strong> (about <strong>four million tonnes per second</strong>) — consistent with its luminosity through <span class="eq">E = mc²</span>; the <strong>solar wind</strong> carries off extra mass, but far less than this photon channel.
+        </li>
+      </ul>
+    </div>
+
+    <h2>Small precision notes (optional)</h2>
+    <ul>
+      <li><strong>Motion strips</strong> under each diagram are pedagogical cartoons; if your system prefers reduced motion, the play buttons are hidden.</li>
+      <li>All diagrams are <strong>schematic</strong>: quarks are confined in hadrons; real calculations use quantum theory and measured masses.</li>
+      <li>The Sun also runs <strong>pp II / pp III</strong> side chains and a modest <strong>CNO</strong> contribution (roughly ~1% of luminosity in standard solar models); the reactions above are the <strong>main pp I branch</strong> that carries most of the fusion rate.</li>
+      <li>A minor <strong>pep</strong> channel (<span class="eq">p + p + e⁻ → <sup>2</sup>H + ν<sub>e</sub></span>) makes deuterium without a positron; it is rare in the Sun but important for some neutrino measurements.</li>
+      <li>Stellar models use precise nuclear masses and reaction rates; the qualitative story — <strong>tighter binding → mass defect → energy</strong> — is the same.</li>
+    </ul>
+
+    <h2>Fusion reactors on Earth</h2>
+    <p>
+      The physics is the same <strong>mass defect</strong> idea as in the Sun, but almost every practical detail differs. Stars are held together by <strong>gravity</strong>; a laboratory plasma would hit the walls in microseconds unless something else <strong>confines</strong> it. The best-known approach is a doughnut-shaped <strong>torus</strong> of hot plasma inside powerful <strong>magnetic fields</strong> — the principle behind <strong>tokamaks</strong> and related devices.
+    </p>
+
+    <div class="diagram-wrap" role="img" aria-label="Comparison: Sun confined by gravity versus tokamak confined by magnetic fields">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220" width="720" height="220">
+        <defs>
+          <marker id="arr-sun" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#ffd54a"/></marker>
+          <marker id="arr-tok" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="#5cdbff"/></marker>
+        </defs>
+        <text x="360" y="22" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Sun vs magnetic fusion: what holds the plasma?</text>
+        <text x="180" y="48" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">In the Sun</text>
+        <circle cx="180" cy="118" r="62" fill="rgba(255,180,80,0.12)" stroke="#ffb050" stroke-width="2"/>
+        <circle cx="180" cy="118" r="28" fill="rgba(255,120,60,0.35)" stroke="#ff8c42" stroke-width="1.5"/>
+        <text x="180" y="122" text-anchor="middle" fill="#ffd8a8" font-size="11" font-family="Segoe UI, sans-serif">hot core</text>
+        <text x="180" y="188" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Gravity confines</text>
+        <text x="180" y="204" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">billions of tonnes of overlying matter</text>
+        <path d="M180 56 L180 78" stroke="#ffd54a" stroke-width="2" marker-end="url(#arr-sun)"/>
+        <text x="195" y="72" fill="#ffd54a" font-size="10" font-family="Segoe UI, sans-serif">F inward</text>
+        <text x="540" y="48" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" font-family="Segoe UI, sans-serif">Tokamak-style reactor (schematic)</text>
+        <ellipse cx="540" cy="118" rx="100" ry="52" fill="none" stroke="#6b7a9e" stroke-width="2" stroke-dasharray="6 4"/>
+        <ellipse cx="540" cy="118" rx="72" ry="36" fill="rgba(200,107,255,0.15)" stroke="#c86bff" stroke-width="2"/>
+        <text x="540" y="122" text-anchor="middle" fill="#e8ecf4" font-size="11" font-family="Segoe UI, sans-serif">plasma</text>
+        <ellipse cx="540" cy="118" rx="95" ry="48" fill="none" stroke="#5cdbff" stroke-width="1" opacity="0.5"/>
+        <path d="M460 118 Q540 88 620 118 Q540 148 460 118" fill="none" stroke="#5cdbff" stroke-width="1.2" opacity="0.7"/>
+        <text x="540" y="188" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">Magnetic fields confine</text>
+        <text x="540" y="204" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">hot, low-density plasma (no gravity bottle)</text>
+      </svg>
+    </div>
+
+    <h3>Why it is harder on Earth</h3>
+    <p>
+      The Sun’s core is only about <strong>15 million kelvin</strong>, but the product of <strong>density</strong>, <strong>temperature</strong>, and <strong>confinement time</strong> is enormous because of the star’s mass. In a tokamak the plasma is vastly more tenuous than lead or water, so to get useful fusion power one typically aims for <strong>deuterium–tritium (D–T)</strong> reactions at roughly <strong>100–200 million kelvin</strong> — hot enough that hydrogen is fully ionised and collision rates are high, using a fuel whose cross-section is far larger than the Sun’s slow <strong>proton–proton</strong> chain at laboratory densities.
+    </p>
+    <p class="eq" style="display:block;text-align:center;margin:1rem 0;padding:0.6rem;"><sup>2</sup>H + <sup>3</sup>H → <sup>4</sup>He + n + 17.6 MeV</p>
+    <p>
+      Most of that energy emerges in the <strong>neutron</strong> (the helium nucleus, or <strong>α</strong> particle, carries the rest). The neutron is not confined by the magnetic field; it flies into the surrounding <strong>blanket</strong>, where its kinetic energy can be turned into heat for a power cycle — and, with a <strong>lithium</strong>-containing blanket, some reactions can <strong>breed tritium</strong> to replace the scarce fuel consumed.
+    </p>
+
+    <div class="diagram-wrap" role="img" aria-label="Diagram: D and T nuclei fuse to helium-4 and neutron releasing energy">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" width="720" height="200">
+        <text x="360" y="24" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Deuterium–tritium fusion (main candidate for first power reactors)</text>
+        <circle cx="120" cy="100" r="26" fill="#1a3050" stroke="#4da3ff" stroke-width="2"/>
+        <text x="120" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">²H</text>
+        <text x="120" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">deuterium</text>
+        <text x="175" y="104" text-anchor="middle" fill="#9aa8c4" font-size="20" font-family="Segoe UI, sans-serif">+</text>
+        <circle cx="230" cy="100" r="26" fill="#2a1f32" stroke="#c86bff" stroke-width="2"/>
+        <text x="230" y="96" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">³H</text>
+        <text x="230" y="110" text-anchor="middle" fill="#9aa8c4" font-size="9" font-family="Segoe UI, sans-serif">tritium</text>
+        <line x1="268" y1="100" x2="338" y2="100" stroke="#6b7a9e" stroke-width="2" marker-end="url(#arr-dt)"/>
+        <defs><marker id="arr-dt" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6b7a9e"/></marker></defs>
+        <text x="303" y="92" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">fusion</text>
+        <ellipse cx="450" cy="100" rx="44" ry="32" fill="rgba(184,160,255,0.2)" stroke="#b8a0ff" stroke-width="2"/>
+        <text x="450" y="104" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">⁴He</text>
+        <text x="450" y="138" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">α particle</text>
+        <text x="518" y="104" text-anchor="middle" fill="#9aa8c4" font-size="18" font-family="Segoe UI, sans-serif">+</text>
+        <circle cx="590" cy="100" r="22" fill="#2a3545" stroke="#9aa8c4" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="590" y="104" text-anchor="middle" fill="#e8ecf4" font-size="12" font-weight="600" font-family="Segoe UI, sans-serif">n</text>
+        <text x="590" y="138" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">neutron (~80% E)</text>
+        <text x="360" y="178" text-anchor="middle" fill="#5cdbff" font-size="11" font-family="Segoe UI, sans-serif">Total ≈ 17.6 MeV released (carried mainly by the neutron and α)</text>
+      </svg>
+    </div>
+
+    <div class="diagram-wrap" role="img" aria-label="Schematic tokamak: toroidal plasma, coils, and central solenoid">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" width="720" height="300">
+        <text x="360" y="26" text-anchor="middle" fill="#9aa8c4" font-size="14" font-family="Segoe UI, sans-serif">Tokamak layout (highly simplified cross-section)</text>
+        <text x="360" y="46" text-anchor="middle" fill="#7a8aad" font-size="11" font-family="Segoe UI, sans-serif">Poloidal cut: doughnut seen from the side — plasma ring circulates <tspan font-style="italic">into</tspan> / <tspan font-style="italic">out of</tspan> the page</text>
+        <rect x="88" y="72" width="544" height="200" rx="12" fill="rgba(0,0,0,0.15)" stroke="#2a3a5c" stroke-width="1"/>
+        <ellipse cx="360" cy="172" rx="200" ry="78" fill="none" stroke="#4a5a78" stroke-width="3"/>
+        <ellipse cx="360" cy="172" rx="168" ry="62" fill="none" stroke="#5cdbff" stroke-width="2" opacity="0.6"/>
+        <ellipse cx="360" cy="172" rx="118" ry="46" fill="none" stroke="#c86bff" stroke-width="16" stroke-opacity="0.35"/>
+        <ellipse cx="360" cy="172" rx="110" ry="40" fill="none" stroke="#c86bff" stroke-width="2" opacity="0.9"/>
+        <text x="248" y="176" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">plasma</text>
+        <text x="472" y="176" text-anchor="middle" fill="#e8ecf4" font-size="11" font-weight="600" font-family="Segoe UI, sans-serif">plasma</text>
+        <rect x="342" y="128" width="36" height="88" rx="5" fill="#3a3548" stroke="#8a8098" stroke-width="2"/>
+        <text x="395" y="168" text-anchor="start" fill="#b8a0c8" font-size="10" font-family="Segoe UI, sans-serif">central solenoid</text>
+        <text x="520" y="100" text-anchor="middle" fill="#9aa8c4" font-size="11" font-family="Segoe UI, sans-serif">toroidal field coils (simplified ring)</text>
+        <text x="360" y="286" text-anchor="middle" fill="#9aa8c4" font-size="10" font-family="Segoe UI, sans-serif">Combined toroidal + poloidal fields twist field lines to improve confinement; real machines add divertors, cryogenics, heating systems, and metres of shielding.</text>
+      </svg>
+    </div>
+
+    <h3>Main challenges — and directions in research</h3>
+    <ul>
+      <li><strong>Confinement and stability.</strong> Turbulence and instabilities let heat and particles leak to the wall; <strong>disruptions</strong> can damage components. Mitigation uses refined <strong>magnetic geometry</strong>, real-time control, fuel pacing, and materials that can survive transients. <strong>Stellarators</strong> twist the magnetic field in hardware so the plasma can be steadier without relying as heavily on a large <strong>plasma current</strong> as in a tokamak.</li>
+      <li><strong>The Lawson / triple-product condition.</strong> Fusion power competes with radiation losses. Roughly, one needs a large enough product of <strong>density</strong> (n), <strong>confinement time</strong> (τ), and <strong>temperature</strong> (T). Larger machines, stronger <strong>superconducting magnets</strong> (including newer <strong>high-temperature superconductor</strong> designs), and better understanding of transport all push toward net energy gain.</li>
+      <li><strong>Materials and neutrons.</strong> D–T neutrons batter the <strong>first wall</strong> and structural steel, causing <strong>activation</strong> and <strong>embrittlement</strong>. Research paths include advanced alloys, <strong>tungsten</strong> armour, reduced-activation steels, and long-term maintenance strategies for a power plant.</li>
+      <li><strong>Tritium supply.</strong> Tritium is scarce in nature; a reactor must <strong>breed</strong> it, typically via lithium in the blanket (<span class="eq">n + <sup>6</sup>Li → <sup>4</sup>He + <sup>3</sup>H</span> and related channels). Demonstrating reliable <strong>tritium breeding ratio &gt; 1</strong> is an engineering milestone.</li>
+      <li><strong>From fusion heat to electricity.</strong> Even after <strong>Q &gt; 1</strong> (more fusion energy out than heating put in), a plant needs efficient <strong>thermal cycles</strong>, availability, and economic competitiveness with other low-carbon sources.</li>
+    </ul>
+
+    <h3>Alternatives to a simple torus</h3>
+    <p>
+      <strong>Stellarator:</strong> a torus-like device with <strong>twisted, non-planar coils</strong> that aim for steady operation with less dependence on induced plasma current — trade-offs include complexity of manufacture and optimisation of the three-dimensional shape.
+    </p>
+    <p>
+      <strong>Inertial confinement fusion (ICF):</strong> a tiny <strong>fuel capsule</strong> is compressed by intense <strong>lasers</strong> or other drivers; fusion burns while inertia briefly holds the fuel together — very different engineering from magnetic bottles, with its own precision and repetition-rate challenges for power production.
+    </p>
+    <p>
+      Other magnetic concepts include <strong>reversed-field pinches</strong>, <strong>field-reversed configurations (FRCs)</strong>, and <strong>magnetic mirrors</strong> (and compact-torus variants). Each tries to improve stability, simplify engineering, or reach high β (plasma pressure relative to magnetic pressure); none has yet matched the tokamak’s experimental maturity for fusion energy gain, but the ecosystem is broad.
+    </p>
+
+    <div class="note">
+      <strong>Summary.</strong> Terrestrial fusion aims at the same <span class="eq">E = Δm c²</span> payoff as the Sun, but replaces <strong>gravitational confinement</strong> with <strong>magnetic or inertial confinement</strong>, usually at <strong>higher temperature</strong> and with <strong>D–T</strong> fuel. The path to a power station runs through plasma science, magnet technology, materials that survive neutrons, tritium breeding, and robust engineering — all active areas of international research.
+    </div>
+
+    <footer>
+      Page: <code>Solar_Fusion.html</code> — solar pp chain, energy from mass defect, and an introduction to terrestrial fusion devices.
+    </footer>
+  </main>
+  <script>
+    (function () {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      document.querySelectorAll(".anim-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var id = btn.getAttribute("data-target");
+          var panel = document.getElementById(id);
+          if (!panel) return;
+          var stage = panel.querySelector(".anim-stage");
+          panel.hidden = false;
+          btn.setAttribute("aria-expanded", "true");
+          btn.textContent = "Replay motion";
+          if (stage) {
+            stage.classList.remove("anim-run");
+            void stage.offsetWidth;
+            stage.classList.add("anim-run");
+          }
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
