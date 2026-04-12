@@ -15,7 +15,7 @@ The page uses **British English** and simple **SVG figures**; no build step or s
 
 Open `index.html` in any modern web browser, or publish the folder on **GitHub Pages** and open the site URL.
 
-**iPhone / iPad:** In Safari, tap **Share → Add to Home Screen**. The **apple-touch-icon** (180×180) is used for the home-screen tile; the short name under the icon comes from **Solar fusion** (`apple-mobile-web-app-title`). The same **apple-touch-icon** asset also appears **in the page header** next to the CJF Hal AI logo.
+**iPhone / iPad:** In Safari, tap **Share → Add to Home Screen**. The **apple-touch-icon** (180×180) is used for the home-screen tile; the short name under the icon comes from **Solar fusion** (`apple-mobile-web-app-title`). The same **apple-touch-icon** asset also appears **in the page header** next to the Hal AI by CJF logo.
 
 Assets in this folder:
 
@@ -24,7 +24,7 @@ Assets in this folder:
 | `index.html` | The full article and diagrams (GitHub Pages entry) |
 | `favicon.svg` | Browser tab icon (vector) |
 | `apple-touch-icon.png` | **180×180** — home-screen tile and header companion icon |
-| `cjf-hal-ai-logo-futuristic.png` | Branding image at the top of the page |
+| `header-logo.svg` | Official Hal AI by CJF branding image at the top of the page |
 
 ---
 
